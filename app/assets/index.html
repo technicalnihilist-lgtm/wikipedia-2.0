@@ -276,6 +276,19 @@ footer.bot .flinks a{font-family:var(--mono);font-size:10px;letter-spacing:.13em
 .cred-sect ul{font-size:15px;color:var(--ink-2);line-height:1.7;max-width:74ch;padding-left:20px}
 .progress{position:fixed;top:0;left:0;height:2px;background:var(--rust);z-index:100;width:0;transition:width .1s linear}
 
+/* pull to refresh */
+body{overscroll-behavior-y:contain}
+.ptr{position:fixed;left:50%;top:0;width:40px;height:40px;margin-left:-20px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);display:grid;place-items:center;
+  z-index:150;opacity:0;pointer-events:none;transform:translateY(-56px);
+  transition:transform .2s cubic-bezier(.34,1.4,.64,1),opacity .18s}
+.ptr.on{opacity:1}
+.ptr svg{width:17px;height:17px;stroke:var(--ink-2);fill:none;stroke-width:2.4;stroke-linecap:round;
+  stroke-linejoin:round;transition:transform .18s}
+.ptr.ready svg{stroke:var(--rust);transform:rotate(180deg)}
+.ptr.spin svg{stroke:var(--rust);animation:ptrspin .8s linear infinite}
+@keyframes ptrspin{to{transform:rotate(360deg)}}
+
 /* ---------- categories ---------- */
 .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
 .cat-tile{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:15px 15px 14px;
@@ -509,6 +522,9 @@ html[data-anim="on"] .toast{transition:opacity .2s,transform calc(.5s*var(--dur)
 <main id="app"></main>
 <div id="ovl" class="ovl" onclick="if(event.target===this)closeOverlay()"></div>
 <div id="toast" class="toast"></div>
+<div class="ptr" id="ptr" aria-hidden="true">
+  <svg viewBox="0 0 24 24"><path d="M12 4v13"/><path d="M6 12l6 6 6-6"/></svg>
+</div>
 
 <script>
 /* ================= state & helpers ================= */
@@ -1060,6 +1076,80 @@ function bindToc(){
     });
   }, {rootMargin:'-80px 0px -70% 0px'});
   document.querySelectorAll('.prose h2, .prose h3').forEach(el=>obs.observe(el));
+}
+
+/* ================= pull to refresh ================= */
+let ptrPulling = false, ptrStart = 0, ptrDist = 0;
+const PTR_THRESHOLD = 74;
+
+function ptrEl(){ return document.getElementById('ptr'); }
+
+function ptrReset(){
+  const el = ptrEl();
+  if(!el) return;
+  el.classList.remove('on','ready','spin');
+  el.style.transform = '';
+  ptrPulling = false; ptrDist = 0;
+}
+
+async function refreshLatest(){
+  const el = ptrEl();
+  if(el) el.classList.add('spin');
+  toast('Refreshing…');
+  // drop the cached counts and any stale view, then re-fetch
+  countsMemo = null;
+  try{ localStorage.removeItem('w20-counts-' + state.lang); }catch(e){}
+  const h = location.hash || '#/';
+  if(h.startsWith('#/a/')) await viewArticle(decodeURIComponent(h.slice(4)));
+  else if(h.startsWith('#/cc/')) await viewCommonsCategory(decodeURIComponent(h.slice(5)));
+  else if(h.startsWith('#/c-en/')) await viewCategory(decodeURIComponent(h.slice(7)), 'en');
+  else if(h.startsWith('#/c/')) await viewCategory(decodeURIComponent(h.slice(4)));
+  else if(h.startsWith('#/life')) await viewLife();
+  else if(h.startsWith('#/credits')){ app().innerHTML = viewCredits(); fillCoverage(); }
+  else await viewHome();
+  const t = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+  if(el){ el.classList.remove('spin'); }
+  ptrReset();
+  toast('Updated · ' + t);
+}
+
+function bindPullToRefresh(){
+  if(window.__ptrBound) return;
+  window.__ptrBound = 1;
+
+  document.addEventListener('touchstart', e => {
+    if(e.touches.length !== 1) return;
+    if((window.scrollY || document.documentElement.scrollTop) > 0) return;
+    if(document.getElementById('ovl')?.classList.contains('open')) return;
+    const hdr = document.querySelector('header.top');
+    const el0 = ptrEl();
+    if(el0 && hdr) el0.style.top = Math.round(hdr.getBoundingClientRect().height + 6) + 'px';
+    ptrPulling = true; ptrStart = e.touches[0].clientY; ptrDist = 0;
+  }, {passive:true});
+
+  document.addEventListener('touchmove', e => {
+    if(!ptrPulling) return;
+    const y = e.touches[0].clientY;
+    const d = y - ptrStart;
+    if(d <= 0 || (window.scrollY || 0) > 0){ ptrReset(); return; }
+    ptrDist = d;
+    e.preventDefault();
+    const el = ptrEl();
+    if(!el) return;
+    el.classList.add('on');
+    const pull = Math.min(d * 0.55, 84);
+    el.style.transform = 'translateY(' + (pull - 46) + 'px)';
+    el.classList.toggle('ready', d >= PTR_THRESHOLD);
+  }, {passive:false});
+
+  document.addEventListener('touchend', () => {
+    if(!ptrPulling) return;
+    const go = ptrDist >= PTR_THRESHOLD;
+    ptrPulling = false;
+    if(go) refreshLatest(); else ptrReset();
+  }, {passive:true});
+
+  document.addEventListener('touchcancel', ptrReset, {passive:true});
 }
 
 /* ================= downloads ================= */
@@ -1831,6 +1921,8 @@ function toggleMore(e){
     <div class="mi" onclick="event.stopPropagation();openFxPanel()"><span>Glass, depth &amp; motion</span><small>adjust ›</small></div>
     <div class="mi" onclick="document.getElementById('moreMenu').classList.remove('open');toggleLang(event)">
       <span>Change language</span><small>${esc(state.langName)}</small></div>
+    <div class="mi" onclick="document.getElementById('moreMenu').classList.remove('open');refreshLatest()">
+      <span>Refresh</span><small>latest</small></div>
     <div class="mi" onclick="toggleTheme();toggleMore()">
       <span>${dark?'Light mode':'Dark mode'}</span><small>${dark?'☀':'☾'}</small></div>
     <div class="mi" onclick="document.getElementById('moreMenu').classList.remove('open');go('#/life')">
@@ -2050,6 +2142,7 @@ fxApply(); if(fx.gyro) gyroOn();
 
 const savedTheme = localStorage.getItem('w20-theme');
 if(savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+bindPullToRefresh();
 updateLangLabel();
 if(window.innerWidth < 700) document.getElementById('q').placeholder = 'Search…';
 route();
