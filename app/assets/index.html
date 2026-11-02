@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="en" data-anim="on" data-glass="on" data-depth="on">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wikipedia 2.0 — live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ec; --bg-2:#efeade; --surface:#fffdf8; --surface-2:#faf7f0;
+  --ink:#1b1915; --ink-2:#4a4438; --dim:#7d7466;
+  --line:rgba(27,25,21,.13); --line-soft:rgba(27,25,21,.07);
+  --rust:#a8401c; --rust-dim:#f2e2d9; --sage:#55663f; --sage-dim:#e6ebdc;
+  --gold:#9a7526; --gold-dim:#f4ecd8;
+  --shadow:0 1px 2px rgba(27,25,21,.05), 0 8px 24px -12px rgba(27,25,21,.18);
+  --shadow-lg:0 2px 4px rgba(27,25,21,.06), 0 24px 48px -24px rgba(27,25,21,.30);
+  --serif:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#15140f;--bg-2:#1b1a14;--surface:#1e1c16;--surface-2:#232019;--ink:#f3efe4;--ink-2:#cdc5b4;--dim:#9a9181;--line:rgba(243,239,228,.15);--line-soft:rgba(243,239,228,.08);--rust:#e2825a;--rust-dim:#3a2318;--sage:#a3b784;--sage-dim:#242c1c;--gold:#d8b568;--gold-dim:#332b16;--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);--shadow-lg:0 2px 4px rgba(0,0,0,.4),0 24px 48px -24px rgba(0,0,0,.7)}
+}
+html[data-theme="light"]{--bg:#f6f3ec;--bg-2:#efeade;--surface:#fffdf8;--surface-2:#faf7f0;--ink:#1b1915;--ink-2:#4a4438;--dim:#7d7466;--line:rgba(27,25,21,.13);--line-soft:rgba(27,25,21,.07);--rust:#a8401c;--rust-dim:#f2e2d9;--sage:#55663f;--sage-dim:#e6ebdc;--gold:#9a7526;--gold-dim:#f4ecd8;--shadow:0 1px 2px rgba(27,25,21,.05),0 8px 24px -12px rgba(27,25,21,.18);--shadow-lg:0 2px 4px rgba(27,25,21,.06),0 24px 48px -24px rgba(27,25,21,.30)}
+html[data-theme="dark"]{--bg:#15140f;--bg-2:#1b1a14;--surface:#1e1c16;--surface-2:#232019;--ink:#f3efe4;--ink-2:#cdc5b4;--dim:#9a9181;--line:rgba(243,239,228,.15);--line-soft:rgba(243,239,228,.08);--rust:#e2825a;--rust-dim:#3a2318;--sage:#a3b784;--sage-dim:#242c1c;--gold:#d8b568;--gold-dim:#332b16;--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);--shadow-lg:0 2px 4px rgba(0,0,0,.4),0 24px 48px -24px rgba(0,0,0,.7)}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 12% -10%,rgba(168,64,28,.07),transparent 42%),
+                   radial-gradient(circle at 88% 0%,rgba(85,102,63,.07),transparent 38%);
+  background-attachment:fixed}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;color:inherit;cursor:pointer;border:none;background:none}
+::selection{background:var(--rust-dim);color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.dot-i{width:6px;height:6px;border-radius:50%;background:var(--rust);flex-shrink:0;display:inline-block}
+
+header.top{position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(14px) saturate(1.2);border-bottom:1px solid var(--line-soft)}
+.top-in{display:flex;align-items:center;gap:16px;height:74px}
+.brand{display:flex;align-items:center;gap:11px;flex-shrink:0;cursor:pointer}
+.mark{width:34px;height:34px;border-radius:9px;background:var(--ink);color:var(--bg);display:grid;place-items:center;
+  font-family:var(--serif);font-size:23px;line-height:1;padding-bottom:3px;flex-shrink:0}
+.brand b{font-family:var(--serif);font-size:21px;font-weight:400;letter-spacing:-.01em;white-space:nowrap}
+.brand b span{color:var(--rust);font-style:italic}
+.brand .sub{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-top:-3px}
+.search{flex:1;position:relative;max-width:760px;margin:0 6px}
+.search input{width:100%;height:50px;border-radius:13px;border:1px solid var(--line);background:var(--surface);
+  padding:0 18px 0 46px;font-size:15.5px;font-family:var(--sans);color:var(--ink);outline:none;
+  transition:border-color .18s,box-shadow .18s;box-shadow:var(--shadow)}
+.search input::placeholder{color:var(--dim)}
+.search input:focus{border-color:var(--rust);box-shadow:0 0 0 4px var(--rust-dim)}
+.search svg{position:absolute;left:16px;top:17px;opacity:.55}
+.kbd{position:absolute;right:12px;top:14px;font-family:var(--mono);font-size:10px;color:var(--dim);border:1px solid var(--line);
+  border-radius:5px;padding:3px 6px;background:var(--surface-2)}
+.top-actions{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;
+  background:var(--surface);transition:.16s;font-size:15px}
+.icon-btn:hover{background:var(--surface-2);border-color:var(--dim);transform:translateY(-1px)}
+.lang-pill{height:32px;border-radius:999px;border:1px solid var(--line);background:var(--surface);padding:0 13px;
+  display:flex;align-items:center;gap:7px;font-size:12.5px;transition:.16s;max-width:148px;color:var(--ink-2)}
+.lang-pill:hover{background:var(--surface-2);border-color:var(--rust);color:var(--rust)}
+.lang-pill .dot{width:5px;height:5px;border-radius:50%;background:var(--sage);flex-shrink:0}
+.lang-pill span.nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.icon-btn.dots{font-size:20px;line-height:0;padding-bottom:9px;letter-spacing:0}
+.moremenu{min-width:250px}
+.moremenu{max-height:calc(100vh - 96px);overflow:auto}
+.menu{position:absolute;top:52px;right:0;min-width:330px;max-width:min(92vw,400px);background:var(--surface);border:1px solid var(--line);
+  border-radius:13px;box-shadow:var(--shadow-lg);padding:7px;display:none;z-index:80;max-height:74vh;overflow:auto}
+.menu.open{display:block;animation:pop .16s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:none}}
+.menu .mi{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 11px;border-radius:8px;
+  font-size:14px;cursor:pointer;transition:background .12s}
+.menu .mi:hover{background:var(--surface-2)}
+.menu .mi.on{background:var(--rust-dim);color:var(--rust);font-weight:500}
+.menu .mi small{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+.menu .mh{padding:8px 11px 5px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.menu input{width:calc(100% - 14px);margin:0 7px 7px;height:34px;border-radius:8px;border:1px solid var(--line);
+  background:var(--surface-2);padding:0 10px;font-size:13.5px;color:var(--ink);outline:none;font-family:var(--sans)}
+.menu input:focus{border-color:var(--rust)}
+.menu .mf{padding:9px 11px;border-top:1px solid var(--line-soft);margin-top:5px;font-size:11.5px;color:var(--dim);line-height:1.45}
+
+.hero{padding:66px 0 40px}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,7vw,82px);line-height:.98;
+  letter-spacing:-.025em;margin:0 0 20px;max-width:16ch}
+.hero h1 em{font-style:italic;color:var(--rust)}
+.hero p.lede{font-size:18.5px;line-height:1.62;color:var(--ink-2);max-width:64ch;margin:0 0 28px}
+.hero p.lede b{font-weight:600;color:var(--ink)}
+.btn{height:44px;padding:0 20px;border-radius:11px;font-size:14.5px;font-weight:500;display:inline-flex;align-items:center;
+  gap:9px;transition:.16s;border:1px solid transparent}
+.btn-primary{background:var(--ink);color:var(--bg)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.btn-ghost{border-color:var(--line);background:var(--surface)}
+.btn-ghost:hover{background:var(--surface-2);transform:translateY(-2px)}
+
+.sect-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:56px 0 20px;
+  padding-bottom:13px;border-bottom:1px solid var(--line)}
+.sect-head h2{font-family:var(--serif);font-weight:400;font-size:31px;letter-spacing:-.015em;margin:0;display:flex;align-items:center;gap:10px}
+
+.tfa{display:grid;grid-template-columns:1.05fr .95fr;border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  background:var(--surface);box-shadow:var(--shadow);cursor:pointer;transition:transform .22s,box-shadow .22s}
+.tfa:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.tfa .fx{padding:38px 40px;display:flex;flex-direction:column;justify-content:center}
+.tfa h3{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3.4vw,44px);line-height:1.03;letter-spacing:-.02em;margin:10px 0 14px}
+.tfa p{color:var(--ink-2);font-size:16px;margin:0 0 20px;max-width:46ch;display:-webkit-box;-webkit-line-clamp:5;
+  -webkit-box-orient:vertical;overflow:hidden}
+.tfa .fig{position:relative;min-height:330px;max-height:430px;background:var(--bg-2);overflow:hidden}
+.tfa .fig img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.tfa:hover .fig img{transform:scale(1.035)}
+.kicker{display:flex;align-items:center;gap:9px}
+.kicker span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--rust)}
+
+.potd{display:grid;grid-template-columns:.9fr 1.1fr;gap:0;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface)}
+.potd .fig{position:relative;background:var(--bg-2);min-height:300px;max-height:420px;overflow:hidden;cursor:pointer}
+.potd .fig img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.potd .fig:hover img{transform:scale(1.03)}
+.potd .px{padding:30px 32px;display:flex;flex-direction:column;justify-content:center}
+.potd h3{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.1;margin:8px 0 12px}
+.potd p{font-size:14.5px;color:var(--ink-2);margin:0 0 16px;line-height:1.6}
+.credit-chip{position:absolute;bottom:12px;left:12px;right:auto;max-width:calc(100% - 24px);display:flex;align-items:center;gap:8px;
+  background:rgba(12,11,9,.64);backdrop-filter:blur(8px);color:#f4f0e6;border-radius:9px;padding:7px 11px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;overflow:hidden;
+  white-space:nowrap;text-overflow:ellipsis}
+.credit-chip b{font-weight:500;color:#fff}
+
+.cols{display:grid;grid-template-columns:1.15fr .85fr;gap:26px;margin-top:26px;align-items:start}
+.panel{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:22px 24px}
+.panel h4{font-family:var(--serif);font-weight:400;font-size:24px;margin:0 0 14px;display:flex;align-items:center;gap:9px}
+.rank{display:flex;gap:13px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line-soft);cursor:pointer}
+.rank:last-child{border-bottom:none}
+.rank .n{font-family:var(--mono);font-size:11px;color:var(--dim);width:20px;flex-shrink:0;padding-top:3px}
+.rank .t{font-size:14.5px;font-weight:500;line-height:1.35}
+.rank .d{font-size:12px;color:var(--dim);margin-top:2px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden}
+.rank .v{font-family:var(--mono);font-size:10px;color:var(--sage);white-space:nowrap;padding-top:3px}
+.rank img{width:46px;height:46px;object-fit:cover;border-radius:7px;flex-shrink:0;border:1px solid var(--line)}
+.rank:hover .t{color:var(--rust)}
+.otd{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--line-soft);cursor:pointer}
+.otd:last-child{border-bottom:none}
+.otd .y{font-family:var(--serif);font-size:19px;color:var(--rust);width:52px;flex-shrink:0;line-height:1.2}
+.otd .x{font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+.otd:hover .x{color:var(--ink)}
+.dyk{font-size:14px;line-height:1.6;color:var(--ink-2);padding:9px 0;border-bottom:1px solid var(--line-soft)}
+.dyk:last-child{border-bottom:none}
+.dyk b{color:var(--ink);font-weight:600}
+.dyk a{color:var(--rust);cursor:pointer}
+
+.crumbs{display:flex;align-items:center;gap:9px;padding:24px 0 0;font-family:var(--mono);font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--dim);flex-wrap:wrap}
+.crumbs a:hover{color:var(--rust)}
+.art-head{padding:18px 0 0}
+.art-head h1{font-family:var(--serif);font-weight:400;font-size:clamp(38px,5.4vw,64px);line-height:1.02;
+  letter-spacing:-.025em;margin:0 0 12px;max-width:22ch;overflow-wrap:anywhere}
+.art-head .desc{font-size:17.5px;color:var(--ink-2);margin:0 0 18px;max-width:64ch;line-height:1.55}
+.art-meta{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:26px}
+.pill{height:31px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
+  display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2)}
+.pill.mono-pill{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+.pill.acc{background:var(--sage-dim);border-color:transparent;color:var(--sage)}
+a.pill:hover{border-color:var(--dim);color:var(--ink)}
+
+.art-grid{display:grid;grid-template-columns:minmax(0,1fr) 288px;gap:48px;align-items:start;padding-bottom:20px}
+.art-grid>*{min-width:0}
+.rail,.rail-box{min-width:0}
+.rail{position:sticky;top:88px;display:flex;flex-direction:column;gap:20px}
+.rail-box{border:1px solid var(--line);border-radius:13px;background:var(--surface);padding:15px 16px}
+.rail-box .rh{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.rail-box ol{margin:0;padding:0;list-style:none;counter-reset:toc;max-height:52vh;overflow:auto}
+.rail-box ol li{counter-increment:toc;margin-bottom:1px}
+.rail-box ol li a{display:block;padding:5px 0 5px 22px;font-size:12.5px;color:var(--ink-2);position:relative;line-height:1.4;border-radius:6px}
+.rail-box ol li a::before{content:counter(toc,decimal-leading-zero);position:absolute;left:0;top:6px;font-family:var(--mono);font-size:9px;color:var(--dim)}
+.rail-box ol li a:hover,.rail-box ol li a.on{color:var(--rust)}
+.rail-box ol li.sub a{padding-left:34px;font-size:12px;color:var(--dim)}
+.rail-box ol li.sub a::before{left:20px;content:'·'}
+.lang-list{display:flex;flex-direction:column;gap:2px;max-height:300px;overflow:auto;margin-top:8px;
+  scrollbar-width:thin}
+.lang-list button{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 9px;
+  border-radius:7px;border:1px solid transparent;background:transparent;font-size:13px;text-align:left;
+  max-width:100%;transition:background .12s,border-color .12s;line-height:1.3}
+.lang-list button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.lang-list button small{font-family:var(--mono);font-size:9px;color:var(--dim);text-transform:uppercase;
+  letter-spacing:.08em;flex-shrink:0}
+.lang-list button:hover{background:var(--surface-2);border-color:var(--line)}
+.lang-list button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.lang-list button.on small{color:var(--bg);opacity:.65}
+.lang-filter{width:100%;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);
+  padding:0 10px;font-size:12.5px;color:var(--ink);outline:none;font-family:var(--sans);margin-top:9px}
+.lang-filter:focus{border-color:var(--rust)}
+
+.prose{max-width:74ch;min-width:0}
+.prose p{margin:0 0 17px;font-size:16.5px;line-height:1.72;color:var(--ink-2)}
+.prose a{color:var(--ink);cursor:pointer;text-decoration:underline;
+  text-decoration-color:color-mix(in srgb,var(--rust) 45%,transparent);
+  text-decoration-thickness:1px;text-underline-offset:2px;transition:color .12s,text-decoration-color .12s}
+.prose a:hover{color:var(--rust);text-decoration-color:var(--rust)}
+.prose h2,.prose .mw-heading2{font-family:var(--serif);font-weight:400;font-size:30px;letter-spacing:-.015em;margin:40px 0 14px;
+  padding-top:16px;border-top:1px solid var(--line-soft);scroll-margin-top:88px}
+.prose h3,.prose .mw-heading3{font-family:var(--sans);font-weight:600;font-size:16px;margin:24px 0 10px;color:var(--ink);scroll-margin-top:88px}
+.prose h4{font-size:14px;font-weight:600;margin:18px 0 8px;color:var(--ink)}
+.prose ul,.prose ol{margin:0 0 18px;padding-left:22px}
+.prose li{margin-bottom:7px;font-size:15.5px;line-height:1.62;color:var(--ink-2)}
+.prose b,.prose strong{color:var(--ink)}
+.prose blockquote{margin:0 0 18px;padding:12px 18px;border-left:2px solid var(--rust);background:var(--surface-2);
+  border-radius:0 8px 8px 0;font-size:15.5px;color:var(--ink-2)}
+.prose sup{font-size:10px;color:var(--dim)}
+.wp-fig{margin:22px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.wp-fig.lead-fig img{max-height:470px;object-fit:cover;object-position:center 30%}
+.wp-fig img{width:100%;display:block;height:auto}
+.wp-fig figcaption{padding:9px 13px;font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--dim);line-height:1.7;border-top:1px solid var(--line-soft);background:var(--surface-2)}
+.wp-fig figcaption b{color:var(--ink-2);font-weight:500}
+.wp-fig figcaption a{color:var(--rust)}
+.prose .table-wrap{overflow-x:auto;margin:0 0 20px;border:1px solid var(--line);border-radius:10px}
+.prose .table-wrap table{min-width:100%}
+.prose table{border-collapse:collapse;font-size:13.5px;background:var(--surface)}
+.prose table th,.prose table td{padding:8px 12px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top}
+.prose table th{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:400}
+.prose .infobox{float:right;width:290px;min-width:0;max-width:290px;margin:0 0 18px 22px;border:1px solid var(--line);
+  border-radius:12px;background:var(--surface);font-size:12.5px;overflow:hidden}
+.prose .infobox img{width:100%;height:auto}
+.wp-fig .cr{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:4px;font-family:var(--mono);font-size:9px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--dim);line-height:1.6}
+.wp-fig .cr .cr-txt{min-width:0;flex:1}
+.lnk{font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--rust);padding:0;
+  text-decoration:underline;text-underline-offset:2px;cursor:pointer;background:none;border:none}
+.lnk:hover{color:var(--ink)}
+.dl-btn{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:6px;
+  border:1px solid var(--line);background:var(--surface);font-family:var(--mono);font-size:9px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;flex-shrink:0;transition:.15s}
+.dl-btn:hover{border-color:var(--rust);color:var(--rust);background:var(--rust-dim)}
+.dl-btn:active{transform:scale(.97)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);
+  padding:11px 18px;border-radius:10px;font-size:13.5px;opacity:0;pointer-events:none;transition:.22s;
+  z-index:300;box-shadow:var(--shadow-lg);max-width:calc(100% - 36px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.wp-fig .cr b{color:var(--ink-2);font-weight:500}
+.prose .infobox th,.prose .infobox td{padding:6px 11px;font-size:12.5px}
+.prose .infobox .infobox-above,.prose .infobox caption{font-family:var(--serif);font-size:17px;padding:11px;text-align:center;
+  background:var(--surface-2);display:table-caption}
+.prose .infobox img{max-width:100%;height:auto}
+
+.skel{background:linear-gradient(90deg,var(--surface-2) 25%,var(--line-soft) 37%,var(--surface-2) 63%);
+  background-size:400% 100%;animation:sh 1.3s ease-in-out infinite;border-radius:10px}
+@keyframes sh{0%{background-position:100% 0}100%{background-position:0 0}}
+.errbox{margin:40px 0;padding:22px 24px;border:1px solid var(--line);border-radius:14px;background:var(--rust-dim)}
+.errbox h3{font-family:var(--serif);font-weight:400;font-size:22px;margin:0 0 8px}
+.errbox p{margin:0;font-size:14.5px;color:var(--ink-2)}
+
+footer.bot{margin-top:70px;border-top:1px solid var(--line);padding:32px 0 56px;display:flex;justify-content:space-between;
+  gap:24px;flex-wrap:wrap;align-items:flex-start}
+footer.bot .fnote{font-size:12.5px;color:var(--dim);max-width:58ch;line-height:1.65}
+footer.bot a{color:var(--rust)}
+footer.bot .flinks{display:flex;gap:20px;flex-wrap:wrap}
+footer.bot .flinks a{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-2)}
+
+.cred-head{padding:52px 0 26px;border-bottom:1px solid var(--line)}
+.cred-head h1{font-family:var(--serif);font-weight:400;font-size:clamp(36px,5vw,56px);letter-spacing:-.02em;margin:0 0 14px}
+.cred-head p{font-size:16.5px;color:var(--ink-2);max-width:68ch;margin:0;line-height:1.62}
+.cred-sect{padding:30px 0;border-bottom:1px solid var(--line-soft)}
+.cred-sect h2{font-family:var(--serif);font-weight:400;font-size:25px;margin:0 0 12px}
+.cred-sect p{font-size:15px;color:var(--ink-2);max-width:74ch;line-height:1.65;margin:0 0 11px}
+.cred-sect ul{font-size:15px;color:var(--ink-2);line-height:1.7;max-width:74ch;padding-left:20px}
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--rust);z-index:100;width:0;transition:width .1s linear}
+
+/* ---------- categories ---------- */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.cat-tile{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:15px 15px 14px;
+  cursor:pointer;transition:.18s;display:flex;flex-direction:column;gap:5px;min-width:0}
+.cat-tile:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--dim)}
+.cat-tile .cn{font-family:var(--serif);font-size:19px;line-height:1.15;overflow-wrap:anywhere}
+.cat-tile .cc{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.cat-tile.dim{opacity:.5}
+.cat-tabs{display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--line-soft);padding-bottom:10px}
+.cat-tabs button{height:32px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
+  font-size:13px;color:var(--ink-2);transition:.14s}
+.cat-tabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cat-tabs button:hover:not(.on){border-color:var(--dim)}
+.cat-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 2px;
+  border-bottom:1px solid var(--line-soft);font-size:14px;cursor:pointer;min-width:0}
+.cat-row:hover{color:var(--rust)}
+.cat-row .cn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.cat-row .go{font-family:var(--mono);font-size:9.5px;color:var(--dim);letter-spacing:.1em;flex-shrink:0}
+.cat-more{width:100%;height:40px;margin-top:14px;border-radius:10px;border:1px dashed var(--line);
+  background:var(--surface);font-size:13.5px;color:var(--ink-2)}
+.cat-more:hover{border-color:var(--rust);color:var(--rust)}
+.topstats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line-soft);
+  border:1px solid var(--line-soft);border-radius:14px;overflow:hidden;margin:34px 0 0}
+.ts-cell{background:var(--surface);padding:17px 19px}
+.ts-cell b{display:block;font-family:var(--serif);font-size:clamp(20px,2.5vw,29px);line-height:1.08;
+  letter-spacing:-.01em;margin-bottom:2px}
+.ts-cell span{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.ts-cell.skelcell{color:var(--dim);font-family:var(--mono);font-size:11px}
+.ts-note{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+  margin-top:9px;line-height:1.6}
+@media(max-width:980px){.topstats{grid-template-columns:repeat(2,1fr)}
+  .ts-cell:last-child:nth-child(odd){grid-column:1/-1}}
+@media(max-width:660px){.topstats{grid-template-columns:repeat(2,1fr)}
+  .ts-cell{padding:13px 14px}.ts-cell b{font-size:19px}.ts-cell span{font-size:8px}}
+.cov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line-soft);
+  border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;margin:16px 0 6px}
+.cov-cell{background:var(--surface);padding:16px 18px}
+.cov-cell b{display:block;font-family:var(--serif);font-size:26px;line-height:1.1;margin-bottom:3px}
+.cov-cell span{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.life-group{margin-bottom:38px}
+.life-group h3{font-family:var(--serif);font-weight:400;font-size:24px;margin:0 0 14px;
+  display:flex;align-items:center;gap:9px}
+.cat-chips{display:flex;flex-wrap:wrap;gap:7px}
+.cat-chip{height:30px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);
+  font-size:12.5px;color:var(--ink-2);display:inline-flex;align-items:center;transition:.15s;max-width:100%;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cat-chip:hover{border-color:var(--rust);color:var(--rust)}
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.res-card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);cursor:pointer;
+  transition:.18s;display:flex;flex-direction:column;min-width:0}
+.res-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--dim)}
+.res-card .th{aspect-ratio:16/10;background:var(--bg-2);overflow:hidden;position:relative}
+.res-card .th img{width:100%;height:100%;object-fit:cover;display:block}
+.res-card .th.empty{display:grid;place-items:center;font-family:var(--serif);font-size:30px;color:var(--dim);opacity:.4}
+.res-card .bd{padding:11px 13px 13px;min-width:0}
+.res-card .bd b{font-family:var(--serif);font-weight:400;font-size:17px;line-height:1.2;display:block;
+  overflow-wrap:anywhere;margin-bottom:3px}
+.res-card .bd span{font-size:12px;color:var(--dim);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden}
+.more-btn{width:100%;height:44px;margin-top:20px;border-radius:11px;border:1px dashed var(--line);
+  background:var(--surface);font-size:14px;color:var(--ink-2);transition:.16s}
+.more-btn:hover{border-color:var(--rust);color:var(--rust);background:var(--rust-dim)}
+@media(max-width:980px){.cat-grid{grid-template-columns:repeat(2,1fr)}.res-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:660px){.res-grid{grid-template-columns:1fr}.cat-tile .cn{font-size:17px}}
+
+/* ---------- in-app overlays ---------- */
+.ovl{position:fixed;inset:0;background:rgba(10,9,7,.74);backdrop-filter:blur(6px);z-index:200;display:none;
+  align-items:center;justify-content:center;padding:22px}
+.ovl.open{display:flex;animation:fadein .15s ease-out}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.ovl-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;max-width:1000px;width:100%;
+  max-height:90vh;overflow:auto;box-shadow:var(--shadow-lg);position:relative}
+.ovl-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 20px;
+  border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:2}
+.ovl-t{font-family:var(--serif);font-size:22px;line-height:1.15;overflow-wrap:anywhere;min-width:0}
+.ovl-x{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;
+  font-size:13px;flex-shrink:0;background:var(--surface)}
+.ovl-x:hover{background:var(--surface-2)}
+.ovl-img{background:var(--bg-2);display:flex;justify-content:center;align-items:center}
+.ovl-img img{max-width:100%;max-height:56vh;object-fit:contain;display:block}
+.ovl-body{padding:18px 20px 22px}
+.ovl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:12px}
+.ovl-grid .mono{display:block;font-size:9px;color:var(--dim);margin-bottom:3px}
+.ovl-grid > div > div{font-size:13.5px;overflow-wrap:anywhere}
+.ovl-desc{font-size:14px;color:var(--ink-2);line-height:1.6;margin:8px 0 0}
+.lic-badge{display:inline-block;padding:2px 7px;border-radius:5px;background:var(--sage-dim);color:var(--sage);
+  font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.rev{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:13.5px;align-items:baseline}
+.rev:last-child{border-bottom:none}
+.rev .u{font-weight:600;min-width:140px;overflow-wrap:anywhere}
+.rev .d{font-family:var(--mono);font-size:10px;color:var(--dim);white-space:nowrap}
+.rev .c{color:var(--ink-2);font-size:12.5px;line-height:1.45;overflow-wrap:anywhere;flex:1}
+.blink{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;
+  border-bottom:1px solid var(--line-soft);font-size:14px;cursor:pointer}
+.blink:hover{color:var(--rust)}
+.prose img{cursor:zoom-in}
+
+@media(max-width:980px){
+  .art-grid{grid-template-columns:1fr;gap:32px}
+  .rail{position:static;order:-1}
+  .tfa{grid-template-columns:1fr}
+  .tfa .fig{min-height:240px;max-height:300px;order:-1}
+  .potd{grid-template-columns:1fr}
+  .potd .fig{min-height:230px;max-height:300px}
+  .cols{grid-template-columns:1fr}
+  .prose .infobox{float:none;width:100%;margin:0 0 18px}
+}
+@media(max-width:660px){
+  .wrap{padding:0 18px}
+  .brand .sub,.brand b{display:none}
+  .search{display:block;flex:1;min-width:0;max-width:none}
+  .search input{height:38px;font-size:13.5px;padding-left:34px}
+  .search svg{top:11px;left:11px}
+  .kbd{display:none}
+  .lang-pill{padding:0 10px;font-size:11.5px;max-width:104px;height:30px}
+  .icon-btn.dots{width:32px;height:32px;font-size:18px}
+  .menu{position:fixed;top:108px;left:10px;right:10px;width:auto;min-width:0;max-width:none;
+    max-height:calc(100vh - 126px)}
+  .top-in{height:auto;flex-wrap:wrap;padding:10px 18px 11px;gap:10px}
+  .brand{order:1}
+  .top-actions{order:2;margin-left:auto}
+  .search{order:3;flex-basis:100%;max-width:none;margin:0}
+  .search input{height:46px;font-size:14.5px;padding-left:40px}
+  .search svg{top:16px;left:14px;width:16px;height:16px}
+  .icon-btn{width:34px;height:34px;font-size:13px}
+  .top-in{height:60px;gap:10px}
+  .tfa .fx{padding:24px 20px}
+  .rail-box ol li:nth-child(n+7){display:none}
+  .prose p,.prose li{font-size:15.5px}
+  footer.bot{flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){html:not([data-anim="on"]) *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+html[data-anim="off"] *{animation:none!important;transition:none!important}
+
+/* ================= FX: liquid glass · 4D depth · bounce ================= */
+:root{--g-blur:22px;--g-a:.55;--g-shine:.6;--dur:1;--ease:cubic-bezier(.34,1.63,.64,1);--glass-rgb:255 255 255}
+@media(prefers-color-scheme:dark){:root{--glass-rgb:38 36 30}}
+html[data-theme="light"]{--glass-rgb:255 255 255}
+html[data-theme="dark"]{--glass-rgb:38 36 30}
+.glass-bg{display:none;position:fixed;left:0;right:0;top:-20vh;bottom:-20vh;overflow:hidden;z-index:-1;pointer-events:none;
+  transform:translate3d(calc(var(--gx,0)*-2px),calc(var(--sy,0)*-.12px),0)}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.62;animation:drift 22s ease-in-out infinite alternate}
+.o1{width:48vmax;height:48vmax;left:-12vmax;top:0;background:#ff8a5c}
+.o2{width:44vmax;height:44vmax;right:-14vmax;top:22vh;background:#6f8cff;animation-duration:28s}
+.o3{width:42vmax;height:42vmax;left:18vw;bottom:-6vmax;background:#4fd1a5;animation-duration:25s}
+.o4{width:30vmax;height:30vmax;right:8vw;bottom:2vmax;background:#f6c85f;animation-duration:19s}
+@keyframes drift{to{transform:translate3d(7vw,6vh,0) scale(1.18)}}
+html[data-glass="on"] .glass-bg{display:block}
+html[data-glass="on"]{--surface:rgb(var(--glass-rgb)/var(--g-a));--surface-2:rgb(var(--glass-rgb)/calc(var(--g-a)*.6))}
+html[data-glass="on"] :is(.panel,.tfa,.potd,.rail-box,.res-card,.cat-tile,.menu,.ovl-card,.pill,.icon-btn,.lang-pill,.btn-ghost,.search input,.wp-fig,.infobox,.topstats,.errbox,.more-btn,.cat-more,.ovl-head){
+  -webkit-backdrop-filter:blur(var(--g-blur)) saturate(1.7);backdrop-filter:blur(var(--g-blur)) saturate(1.7);
+  background-image:radial-gradient(circle at var(--mx,30%) var(--my,0%),rgb(255 255 255/calc(var(--gl,0)*var(--g-shine)*.45)),transparent 55%),
+    linear-gradient(135deg,rgb(255 255 255/calc(var(--g-shine)*.4)),rgb(255 255 255/0) 40%,rgb(255 255 255/calc(var(--g-shine)*.12)));
+  box-shadow:inset 0 1px 0 rgb(255 255 255/calc(var(--g-shine)*.9)),inset 0 0 0 1px rgb(255 255 255/calc(var(--g-shine)*.22)),
+    inset 0 -14px 26px -16px rgb(255 255 255/calc(var(--g-shine)*.35)),calc(var(--sx,0)*1px) calc(16px + var(--sy,0)*1px) 38px -18px rgb(0 0 0/.38)}
+html[data-glass="on"] header.top{background:rgb(var(--glass-rgb)/calc(var(--g-a)*.75));-webkit-backdrop-filter:blur(var(--g-blur)) saturate(1.8);
+  backdrop-filter:blur(var(--g-blur)) saturate(1.8);box-shadow:inset 0 -1px 0 rgb(255 255 255/calc(var(--g-shine)*.4))}
+html[data-glass="on"] .ovl{background:rgb(10 9 7/.38);-webkit-backdrop-filter:blur(calc(var(--g-blur)*.5));backdrop-filter:blur(calc(var(--g-blur)*.5))}
+html[data-glass="on"] .ovl-head{box-shadow:none}
+
+/* 4D depth */
+html[data-depth="on"] :is(.tfa,.potd,.res-card,.cat-tile,.panel,.topstats){will-change:transform}
+html[data-gyro="on"][data-depth="on"] :is(.tfa,.potd,.res-card,.cat-tile,.panel,.topstats){transform:perspective(900px) rotateX(calc(var(--gy,0)*1deg)) rotateY(calc(var(--gx,0)*1deg));transition:transform .15s linear}
+.ovl{perspective:1200px}
+
+/* bounce animations */
+@keyframes rise{from{opacity:0;transform:translateY(24px) scale(.97);filter:blur(5px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes cardIn{from{opacity:0;transform:perspective(1100px) rotateX(14deg) scale(var(--zs,.12));filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes cardOut{to{opacity:0;transform:perspective(1100px) rotateX(10deg) scale(var(--zs,.12));filter:blur(6px)}}
+@keyframes appOpen{from{opacity:0;transform:scale(calc(1 - (1 - var(--zs,.12))*.16));filter:blur(10px)}to{opacity:1;transform:none;filter:blur(0)}}
+.ovl-card{transform-origin:var(--ox,50%) var(--oy,50%)}
+html[data-anim="on"] #app{transform-origin:var(--ox,50%) var(--oy,20%)}
+html[data-anim="on"] #app.opening{animation:appOpen calc(.75s*var(--dur)) var(--ease) backwards}
+@keyframes fadeOut{to{opacity:0}}
+html[data-anim="on"] #app .wrap>*{animation:rise calc(.75s*var(--dur)) var(--ease) backwards}
+html[data-anim="on"] #app .wrap>:nth-child(2){animation-delay:calc(.07s*var(--dur))}
+html[data-anim="on"] #app .wrap>:nth-child(3){animation-delay:calc(.14s*var(--dur))}
+html[data-anim="on"] #app .wrap>:nth-child(4){animation-delay:calc(.21s*var(--dur))}
+html[data-anim="on"] #app .wrap>:nth-child(n+5){animation-delay:calc(.28s*var(--dur))}
+html[data-anim="on"] #app.leaving{opacity:0;transform:scale(.95) translateY(16px);filter:blur(6px);
+  transition:opacity calc(.17s*var(--dur)) ease-in,transform calc(.17s*var(--dur)) cubic-bezier(.6,-.28,.74,.05),filter calc(.17s*var(--dur)) ease-in}
+html[data-anim="on"] .ovl.open .ovl-card{animation:cardIn calc(.6s*var(--dur)) var(--ease)}
+html[data-anim="on"] .ovl.open .ovl-card.again{animation:none}
+html[data-anim="on"] .ovl.closing{animation:fadeOut calc(.28s*var(--dur)) ease-in forwards}
+html[data-anim="on"] .ovl.closing .ovl-card{animation:cardOut calc(.34s*var(--dur)) cubic-bezier(.55,-.2,.75,.1) forwards}
+html[data-anim="on"] .menu{display:block;opacity:0;visibility:hidden;pointer-events:none;transform-origin:top right;transform:scale(.7) translateY(-14px);animation:none;
+  transition:transform calc(.5s*var(--dur)) var(--ease),opacity calc(.2s*var(--dur)),visibility 0s calc(.3s*var(--dur))}
+html[data-anim="on"] .menu.open{opacity:1;visibility:visible;pointer-events:auto;transform:none;animation:none;transition-delay:0s}
+html[data-anim="on"] :is(.btn,.icon-btn,.lang-pill,.pill,.cat-tile,.res-card,.tfa,.potd,.panel,.cat-chip,.dl-btn,.more-btn,.cat-more,.mi,.cat-tabs button,.lang-list button,.ovl-x,.rank,.otd){
+  transition:transform calc(.55s*var(--dur)) var(--ease),box-shadow .3s,background-color .2s,border-color .2s,color .2s}
+html[data-anim="on"] :is(.btn,.icon-btn,.lang-pill,.pill,.dl-btn,.more-btn,.cat-chip,.ovl-x,.cat-more):active{transform:scale(.92)}
+html[data-anim="on"] .mi:active{transform:scale(.97)}
+html[data-anim="on"] .toast{transition:opacity .2s,transform calc(.5s*var(--dur)) var(--ease)}
+
+/* settings panel */
+.menu input.fxr{height:20px;border:none;background:transparent;padding:0;margin:2px 0 0;width:100%;accent-color:var(--rust)}
+.menu input.fxc{width:18px;height:18px;margin:0;padding:0;accent-color:var(--rust);flex-shrink:0}
+.fxrow{padding:6px 11px 4px}.fxrow label{display:flex;justify-content:space-between;font-size:13.5px}
+.fxrow small{font-family:var(--mono);font-size:10px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="glass-bg" id="gbg"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><i class="orb o4"></i></div>
+<div class="progress" id="prog"></div>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" onclick="go('#/')">
+      <div class="mark">W</div>
+      <div><b>Wikipedia <span>2.0</span></b><span class="sub">Live edition</span></div>
+    </a>
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search all of Wikipedia…" autocomplete="off">
+      <span class="kbd">/</span>
+    </div>
+    <div class="top-actions">
+      <div style="position:relative">
+        <button class="lang-pill" id="langBtn" onclick="toggleLang(event)" title="Reading language">
+          <span class="dot"></span><span class="nm" id="langLabel">English</span>
+        </button>
+        <div class="menu" id="langMenu"></div>
+      </div>
+      <div style="position:relative">
+        <button class="icon-btn dots" id="moreBtn" onclick="toggleMore(event)" title="More" aria-label="More options">⋮</button>
+        <div class="menu moremenu" id="moreMenu"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="app"></main>
+<div id="ovl" class="ovl" onclick="if(event.target===this)closeOverlay()"></div>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ================= state & helpers ================= */
+let currentLanglinks = [];     // translations of the article on screen
+const state = {
+  lang: localStorage.getItem('w20-lang') || 'en',
+  langName: localStorage.getItem('w20-lang-name') || 'English',
+  langs: null,          // sitematrix
+  credits: {},          // file title -> {artist, license, page}
+};
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* jsq: percent-encode a title for safe use inside a single-quoted JS string in an HTML attribute */
+const jsq = s => encodeURIComponent(String(s==null?'':s)).replace(/'/g,'%27').replace(/"/g,'%22');
+const nf = n => Number(n||0).toLocaleString('en-IN');
+const app = () => document.getElementById('app');
+
+const ua = {'Api-User-Agent':'Wikipedia2.0/1.0 (design study)'};
+async function jget(url){
+  const r = await fetch(url, {headers: ua});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return r.json();
+}
+function wp(lang, params){
+  const p = new URLSearchParams(Object.assign({format:'json', formatversion:'2', origin:'*'}, params));
+  return jget(`https://${lang}.wikipedia.org/w/api.php?${p}`);
+}
+function rest(lang, path){ return jget(`https://${lang}.wikipedia.org/api/rest_v1/${path}`); }
+function commons(params){
+  const p = new URLSearchParams(Object.assign({format:'json', formatversion:'2', origin:'*'}, params));
+  return jget(`https://commons.wikimedia.org/w/api.php?${p}`);
+}
+function feedPath(){
+  const d = new Date(), y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), dd = String(d.getDate()).padStart(2,'0');
+  return `${y}/${m}/${dd}`;
+}
+const feed = lang => jget(`https://api.wikimedia.org/feed/v1/wikipedia/${lang}/featured/${feedPath()}`);
+
+/* ================= language list ================= */
+async function loadLangs(){
+  if(state.langs) return state.langs;
+  const cached = localStorage.getItem('w20-langs2');
+  if(cached){ try{ state.langs = JSON.parse(cached); return state.langs; }catch(e){} }
+  try{
+    const d = await wp('en', {action:'sitematrix', smtype:'language'});
+    const arr = [];
+    Object.entries(d.sitematrix||{}).forEach(([k,v])=>{
+      if(!/^\d+$/.test(k) || !v.site) return;
+      const main = v.site.find(s=>s.code===v.code) || v.site[0];
+      arr.push({code:v.code, name:v.localname||v.name, native:v.name||v.localname||v.code, closed:!!v.closed});
+    });
+    arr.sort((a,b)=>a.code.localeCompare(b.code));
+    state.langs = arr;
+    localStorage.setItem('w20-langs2', JSON.stringify(arr));
+  }catch(e){ state.langs = [{code:'en',name:'English',native:'English'}]; }
+  return state.langs;
+}
+
+/* ================= image credits ================= */
+function normFile(t){ return String(t||'').replace(/^File:/,'').replace(/_/g,' ').toLowerCase(); }
+function fileFromUrl(u){
+  const clean = String(u||'').split('?')[0];
+  const m = clean.match(/\/(?:thumb\/[^/]+\/[^/]+\/)?([^/]+?\.(?:jpg|jpeg|png|gif|webp|tif|tiff))(?:\/|$)/i);
+  return m ? 'File:' + decodeURIComponent(m[1]).replace(/^\d+px-/,'') : '';
+}
+function creditLine(cr, file){
+  const view = file
+    ? `<button class="lnk" onclick="event.preventDefault();event.stopPropagation();openImage(decodeURIComponent('${jsq(file)}'))">View file ↗</button>`
+    : '';
+  return cr ? `<b>${esc(cr.artist)}</b> · ${esc(cr.license)}${view?` · ${view}`:''}`
+            : `Wikimedia Commons${view?` · ${view}`:''}`;
+}
+async function loadCredits(files){
+  const todo = files.filter(f=>!state.credits[normFile(f)]).slice(0,45);
+  if(!todo.length) return;
+  try{
+    const d = await commons({action:'query', titles:todo.join('|'), prop:'imageinfo', iiprop:'extmetadata|url', iiurlwidth:'900'});
+    (d.query?.pages||[]).forEach(p=>{
+      const ii = (p.imageinfo||[])[0]; if(!ii) return;
+      const em = ii.extmetadata||{};
+      const g = k => String(em[k]?.value||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+      state.credits[normFile(p.title)] = {
+        artist: g('Artist') || g('Credit') || 'Unknown author',
+        license: g('LicenseShortName') || g('UsageTerms') || 'See file page',
+        page: ii.descriptionurl || '',
+        licenseUrl: g('LicenseUrl'),
+        thumb: ii.thumburl || ''
+      };
+    });
+  }catch(e){}
+}
+
+/* ================= home ================= */
+function skeletonHome(){
+  return `<div class="wrap"><div class="hero"><h1>The encyclopedia,<br><em>live</em>.</h1></div>
+   <div class="skel" style="height:300px"></div></div>`;
+}
+
+async function viewHome(){
+  app().innerHTML = skeletonHome();
+  let f = null;
+  try{ f = await feed(state.lang); }catch(e){}
+  const tfa = f?.tfa, potd = f?.image, most = f?.mostread?.articles||[], otd = f?.onthisday||[], dyk = f?.dyk||[], news = f?.news||[];
+  const langN = state.langName;
+
+  if(!tfa && !most.length){
+    app().innerHTML = `<div class="wrap"><section class="hero">
+      <h1>Read anything.<br><em>Anything</em> at all.</h1>
+      <p class="lede">Today's feed isn't published in <b>${esc(langN)}</b>. Search below — every article in this language is one click away, live from Wikipedia.</p>
+      <div class="hero-cta"><button class="btn btn-primary" onclick="randomArticle()">Surprise me →</button></div>
+    </section></div>` + footer();
+    return;
+  }
+
+  let heroImg = tfa?.originalimage?.source || tfa?.thumbnail?.source || '';
+  const potdImg = potd?.image?.source || '';
+  const potdArtist = potd?.artist?.text || 'Unknown';
+  const heroFile = fileFromUrl(heroImg), potdFile = potd?.title || fileFromUrl(potdImg);
+  try{ await loadCredits([heroFile, potdFile].filter(Boolean)); }catch(e){}
+  const heroCr = state.credits[normFile(heroFile)];
+  const potdCr = state.credits[normFile(potdFile)];
+  let roots = [];
+  try{ roots = await rootCategories(state.lang); }catch(e){}
+  if(heroCr?.thumb) heroImg = heroCr.thumb;
+  const potdShow = potdCr?.thumb || potdImg;
+
+  app().innerHTML = `
+  <div class="wrap">
+    <section class="hero">
+      <h1>The encyclopedia,<br><em>live</em>.</h1>
+      <p class="lede">Everything on Wikipedia, read through a calmer interface. Every article in <b>${esc(langN)}</b>, fetched the moment you open it — no snapshot, no stale copy, and every photograph credited to the person who made it.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" onclick="randomArticle()">Random article →</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('q').focus()">Search Wikipedia</button>
+        <button class="btn btn-ghost" onclick="go('#/life')">Animals &amp; nature</button>
+      </div>
+      <div class="topstats" id="topStats">
+        <div class="ts-cell skelcell">loading live counts…</div>
+        <div class="ts-cell skelcell"></div><div class="ts-cell skelcell"></div>
+        <div class="ts-cell skelcell"></div><div class="ts-cell skelcell"></div>
+      </div>
+      <div class="ts-note" id="tsNote">Live from Wikipedia and Wikimedia Commons · change language to see another edition's numbers</div>
+    </section>
+
+    ${tfa ? `<section>
+      <div class="sect-head"><h2><span class="dot-i"></span>Today's featured article</h2>
+        <span class="mono" style="color:var(--dim)">${esc(langN)} · ${new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</span></div>
+      <article class="tfa" onclick="go('#/a/${jsq(tfa.titles.normalized)}')">
+        <div class="fx">
+          <div class="kicker"><span>Featured</span></div>
+          <h3>${esc(tfa.titles.normalized)}</h3>
+          <p>${esc(tfa.extract||'')}</p>
+          <div class="art-meta" style="margin:0">
+            <span class="pill mono-pill acc">Open article</span>
+            ${heroFile?`<button class="pill mono-pill" data-dl="${esc(heroFile)}" data-src="${esc(heroImg)}"
+              data-thumb="${esc(heroCr?.thumb||'')}">↓ Download image</button>`:''}
+          </div>
+        </div>
+        ${heroImg?`<div class="fig"><img src="${heroImg}" alt=""><div class="credit-chip">${heroCr?`<b>${esc(heroCr.artist)}</b> · ${esc(heroCr.license)}`:'Wikimedia Commons'}</div></div>`:''}
+      </article>
+    </section>`:''}
+
+    ${potdImg ? `<section>
+      <div class="sect-head"><h2><span class="dot-i"></span>Picture of the day</h2>
+        <span class="mono" style="color:var(--dim)">Wikimedia Commons</span></div>
+      <div class="potd">
+        <div class="fig" onclick="openImage(decodeURIComponent('${jsq(potdFile||'')}'))">
+          <img src="${potdShow}" alt="">
+          <div class="credit-chip"><b>${esc(potdCr?.artist || potdArtist)}</b> · ${esc(potdCr?.license || potd.license?.short_name || 'see file page')}</div>
+        </div>
+        <div class="px">
+          <div class="kicker"><span>Commons</span></div>
+          <h3>${esc((potd.title||'').replace(/^File:/,'').replace(/_/g,' '))}</h3>
+          <p>${esc(potd.description?.text || '')}</p>
+          <div class="art-meta" style="margin:0">
+            <button class="pill mono-pill" onclick="openImage(decodeURIComponent('${jsq(potdFile||'')}'))">File details</button>
+            ${potdFile?`<button class="pill mono-pill" data-dl="${esc(potdFile)}" data-src="${esc(potdShow)}"
+              data-thumb="${esc(potdCr?.thumb||'')}">↓ Download</button>`:''}
+            ${(potdCr?.licenseUrl||potd.license?.url)?`<a class="pill mono-pill" href="${potdCr?.licenseUrl||potd.license?.url}" target="_blank" rel="noopener">${esc(potdCr?.license||potd.license?.short_name||'Licence')} ↗</a>`:''}
+          </div>
+        </div>
+      </div>
+    </section>`:''}
+
+    <div class="cols">
+      <div class="panel">
+        <h4><span class="dot-i"></span>Most read today</h4>
+        ${most.slice(0,10).map((m,i)=>`
+          <div class="rank" onclick="go('#/a/${jsq(m.titles.normalized)}')">
+            <div class="n">${i+1}</div>
+            ${m.thumbnail?`<img src="${m.thumbnail.source}" alt="" loading="lazy">`:''}
+            <div style="min-width:0;flex:1"><div class="t">${esc(m.titles.normalized)}</div>
+            <div class="d">${esc(m.description||m.extract||'')}</div></div>
+            <div class="v">${nf(m.views)}</div>
+          </div>`).join('') || '<p style="color:var(--dim);font-size:14px">Not available in this language.</p>'}
+      </div>
+      <div>
+        ${otd.length?`<div class="panel" style="margin-bottom:20px">
+          <h4><span class="dot-i"></span>On this day</h4>
+          ${otd.slice(0,5).map(o=>{
+            const p = o.pages?.[0];
+            return `<div class="otd" ${p?`onclick="go('#/a/${jsq(p.titles.normalized)}')"`:''}>
+              <div class="y">${o.year}</div><div class="x">${esc(o.text)}</div></div>`;
+          }).join('')}
+        </div>`:''}
+        ${news.length?`<div class="panel" style="margin-bottom:20px">
+          <h4><span class="dot-i"></span>In the news</h4>
+          ${news.slice(0,4).map(n=>{
+            const l = n.links?.[0];
+            return `<div class="otd" ${l?`onclick="go('#/a/${jsq(l.titles.normalized)}')"`:''}>
+              <div class="x" style="font-size:13.5px">${esc(String(n.story||'').replace(/<[^>]+>/g,''))}</div></div>`;
+          }).join('')}
+        </div>`:''}
+        ${dyk.length?`<div class="panel">
+          <h4><span class="dot-i"></span>Did you know</h4>
+          ${dyk.slice(0,4).map(d=>`<div class="dyk">${esc(d.text)}</div>`).join('')}
+        </div>`:''}
+      </div>
+    </div>
+  </div>
+  ${catSection(roots)}
+  ${footer()}`;
+  bindDownloads(app());
+  fillTopStats();
+}
+
+/* ================= search ================= */
+let searchTimer = null, lastQuery = '';
+function onSearchInput(e){
+  const q = e.target.value.trim();
+  clearTimeout(searchTimer);
+  if(!q){ if(location.hash!=='#/' && location.hash!=='') route(); else viewHome(); return; }
+  searchTimer = setTimeout(()=>runSearch(q), 320);
+}
+async function runSearch(q){
+  lastQuery = q;
+  app().innerHTML = `<div class="wrap"><div class="sect-head"><h2><span class="dot-i"></span>Searching “${esc(q)}”…</h2></div>
+    <div class="skel" style="height:120px"></div></div>`;
+  try{
+    const d = await wp(state.lang, {
+      action:'query', generator:'search', gsrsearch:q, gsrlimit:'16', gsrnamespace:'0',
+      prop:'pageimages|description', piprop:'thumbnail', pithumbsize:'300'
+    });
+    if(q !== lastQuery) return;
+    const pages = (d.query?.pages||[]).sort((a,b)=>a.index-b.index);
+    if(!pages.length){
+      app().innerHTML = `<div class="wrap"><div class="sect-head"><h2><span class="dot-i"></span>No results</h2></div>
+        <div class="errbox"><h3>Nothing matched “${esc(q)}”</h3>
+        <p>Try a different spelling, or switch language — this search only looks inside <b>${esc(state.langName)}</b> Wikipedia.</p></div></div>`+footer();
+      return;
+    }
+    app().innerHTML = `<div class="wrap">
+      <div class="sect-head"><h2><span class="dot-i"></span>Results</h2>
+        <span class="mono" style="color:var(--dim)">${pages.length} in ${esc(state.langName)}</span></div>
+      ${pages.map(p=>`
+        <div class="rank" onclick="go('#/a/${jsq(p.title)}')" style="padding:14px 0">
+          ${p.thumbnail?`<img src="${p.thumbnail.source}" alt="" loading="lazy" style="width:64px;height:64px">`:
+            `<div style="width:64px;height:64px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line);flex-shrink:0"></div>`}
+          <div style="min-width:0;flex:1">
+            <div class="t" style="font-size:16px">${esc(p.title)}</div>
+            <div class="d" style="-webkit-line-clamp:3">${esc(p.description||'')}</div>
+          </div>
+        </div>`).join('')}
+      </div>`+footer();
+  }catch(err){
+    app().innerHTML = `<div class="wrap"><div class="errbox"><h3>Search failed</h3><p>${esc(err.message)}</p></div></div>`+footer();
+  }
+}
+
+/* ================= article ================= */
+function cleanArticle(html){
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const root = doc.querySelector('.mw-parser-output') || doc.body;
+  root.querySelectorAll('style,script,link,meta,.mw-editsection,sup.reference,.navbox,.vertical-navbox,'+
+    '.sistersitebox,.ambox,.metadata,.hatnote,.mw-references-wrap,.reflist,#toc,.printfooter,.mw-empty-elt,'+
+    '.shortdescription,.mw-cite-backlink,.reference,.noprint,.mw-jump-link,.mw-indicators,.side-box,'+
+    '.mbox-small,.mw-hidden-catlinks,.catlinks,.navigation-not-searchable,.portal,.mw-authority-control').forEach(el=>el.remove());
+  // <picture><source srcset="//..."> inherits file:// scheme — normalise or drop
+  root.querySelectorAll('video,audio').forEach(v=>v.remove());
+  root.querySelectorAll('source').forEach(src=>{
+    const ss = (src.getAttribute('srcset')||'').split(',').map(x=>x.trim()).filter(Boolean)
+      .map(x=>{ const [u,...d] = x.split(/\s+/);
+                const a = u.startsWith('//') ? 'https:'+u : (/^https?:/i.test(u) ? u : '');
+                return a ? [a,...d].join(' ') : ''; })
+      .filter(Boolean);
+    if(ss.length) src.setAttribute('srcset', ss.join(', ')); else src.remove();
+  });
+  root.querySelectorAll('img').forEach(img=>{
+    const abs = u => {
+      if(!u) return '';
+      u = u.split('?')[0];
+      if(u.startsWith('//')) return 'https:'+u;
+      if(/^https?:/i.test(u)) return u;
+      return '';                       // relative srcset entries are unusable
+    };
+    const srcset = img.getAttribute('srcset')||'';
+    const orig = abs(img.getAttribute('src'));
+    let best = '';
+    if(srcset){
+      const parts = srcset.split(',').map(x=>x.trim().split(/\s+/)[0]).filter(Boolean);
+      best = abs(parts[parts.length-1]||'');
+    }
+    img.removeAttribute('srcset'); img.removeAttribute('width'); img.removeAttribute('height');
+    const final = best || orig;
+    if(!final || /^https?:\/\/maps\.wikimedia\.org/i.test(final)){ img.remove(); return; }
+    img.setAttribute('src', final);
+    img.dataset.fb = orig;
+    img.setAttribute('loading','lazy');
+    img.setAttribute('alt', img.getAttribute('alt')||'');
+    img.addEventListener('error', ()=>{
+      if(img.dataset.fb && img.src !== img.dataset.fb){ img.src = img.dataset.fb; img.dataset.fb = ''; }
+    });
+  });
+  root.querySelectorAll('table').forEach(t=>{
+    if(t.classList.contains('infobox')) return;
+    const w = doc.createElement('div'); w.className='table-wrap';
+    t.parentNode.insertBefore(w, t); w.appendChild(t);
+  });
+  root.querySelectorAll('h2,h3,h4').forEach((h,i)=>{
+    if(!h.id) h.id = 'h'+i;
+  });
+  [...root.querySelectorAll('h2,h3,h4')].forEach(h=>{
+    const block = h.closest('.mw-heading') || h;
+    let n = block.nextElementSibling, has = false;
+    while(n && !/^H[2-4]$/.test(n.tagName) && !n.querySelector('h2,h3,h4')){
+      if(n.textContent.trim().length > 3 || n.querySelector('img')){ has = true; break; }
+      n = n.nextElementSibling;
+    }
+    if(!has) block.remove();
+  });
+  return root;
+}
+
+async function viewArticle(title){
+  const lang = state.lang;
+  app().innerHTML = `<div class="wrap"><div class="crumbs"><a onclick="go('#/')">Home</a><span>/</span>
+    <span>${esc(state.langName)}</span></div>
+    <div style="padding:26px 0"><div class="skel" style="height:54px;width:60%;margin-bottom:14px"></div>
+    <div class="skel" style="height:22px;width:40%;margin-bottom:30px"></div>
+    <div class="skel" style="height:300px"></div></div></div>`;
+
+  let parse, summary, media, catsD;
+  try{
+    [parse, summary, media, catsD] = await Promise.all([
+      wp(lang, {action:'parse', page:title, prop:'text|displaytitle|langlinks', redirects:'1', disableeditsection:'1', disabletoc:'1'}),
+      rest(lang, 'page/summary/'+encodeURIComponent(title.replace(/ /g,'_'))).catch(()=>null),
+      rest(lang, 'page/media-list/'+encodeURIComponent(title.replace(/ /g,'_'))).catch(()=>null),
+      wp(lang, {action:'query', titles:title, prop:'categories', cllimit:'32', clshow:'!hidden', redirects:'1'}).catch(()=>null)
+    ]);
+  }catch(err){
+    app().innerHTML = `<div class="wrap"><div class="crumbs"><a onclick="go('#/')">Home</a></div>
+      <div class="errbox"><h3>Couldn't load “${esc(title)}”</h3>
+      <p>${esc(err.message)} — the article may not exist in ${esc(state.langName)} Wikipedia. Try another language, or search for something else.</p></div></div>`+footer();
+    return;
+  }
+  if(parse.error){
+    app().innerHTML = `<div class="wrap"><div class="crumbs"><a onclick="go('#/')">Home</a></div>
+      <div class="errbox"><h3>No such article in ${esc(state.langName)}</h3>
+      <p>“${esc(title)}” doesn't exist in this language edition. Switch language from the top bar, or search instead.</p></div></div>`+footer();
+    return;
+  }
+
+  const P = parse.parse;
+  const root = cleanArticle(P.text);
+  const realTitle = summary?.title || P.title;
+  const desc = summary?.description || '';
+  const canonical = summary?.content_urls?.desktop?.page || `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(realTitle.replace(/ /g,'_'))}`;
+  const langlinks = P.langlinks || [];
+  currentLanglinks = langlinks;
+  let langMap = {};
+  try{
+    const ls = await loadLangs();
+    ls.forEach(l=>{ langMap[l.code] = l.native || l.name || l.code; });
+  }catch(e){}
+  const langNameOf = c => langMap[c] || c;
+  const sortedLL = [...langlinks].sort((a,b)=>langNameOf(a.lang).localeCompare(langNameOf(b.lang)));
+
+  // image credits
+  const files = (media?.items||[]).filter(i=>i.type==='image' && i.title).map(i=>i.title);
+  const fileMap = {};
+  (media?.items||[]).forEach(i=>{ if(i.title) fileMap[normFile(i.title)] = i.title; });
+  await loadCredits(files.slice(0,45));
+
+  // wrap images with credit captions
+  root.querySelectorAll('img').forEach(img=>{
+    const key = normFile(fileFromUrl(img.getAttribute('src')));
+    const cr = state.credits[key];
+    const line = document.createElement('span');
+    line.className = 'cr';
+    const ft0 = fileFromUrl(img.getAttribute('src'));
+    line.innerHTML = `<span class="cr-txt">${creditLine(cr, ft0)}</span>` +
+      `<button class="dl-btn" data-dl="${esc(ft0)}" data-src="${esc(img.getAttribute('src'))}"` +
+      ` data-thumb="${esc(cr?.thumb||'')}">↓ Download</button>`;
+    img.addEventListener('error', ()=>{ const f = img.closest('figure'); if(f) f.style.display='none'; else img.style.display='none'; });
+    const fig = img.closest('figure');
+    if(fig){
+      fig.classList.add('wp-fig');
+      const cap = fig.querySelector('figcaption');
+      if(cap) cap.appendChild(line); else fig.appendChild(line);
+    } else if(!img.closest('.infobox')){
+      const w = document.createElement('figure'); w.className='wp-fig';
+      img.parentNode.insertBefore(w, img); w.appendChild(img); w.appendChild(line);
+    }
+    const ft = fileFromUrl(img.getAttribute('src'));
+    if(ft){
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', e=>{ e.preventDefault(); e.stopPropagation(); openImage(ft); });
+    }
+  });
+
+  // every Wikipedia link resolves inside the app
+  root.querySelectorAll('a').forEach(a=>{
+    let href = a.getAttribute('href')||'';
+    if(!href || href.startsWith('#')) return;
+    const inApp = t => { a.setAttribute('href','#/a/'+encodeURIComponent(t)); a.removeAttribute('target'); a.removeAttribute('rel'); };
+    const asFile = t => { a.setAttribute('href','#'); a.removeAttribute('target');
+      a.onclick = e => { e.preventDefault(); e.stopPropagation(); openImage(t); }; };
+
+    const absWp = href.match(/^https?:\/\/[a-z-]+\.(?:m\.)?wikipedia\.org\/wiki\/(.+)$/i);
+    if(absWp){ const t = decodeURIComponent(absWp[1]).replace(/_/g,' ');
+      if(/^(File|Image):/i.test(t)) asFile(t.replace(/^(File|Image):/i,'File:')); else inApp(t); return; }
+    if(href.startsWith('/wiki/')){ const t = decodeURIComponent(href.slice(6)).replace(/_/g,' ');
+      if(/^(File|Image):/i.test(t)) asFile(t.replace(/^(File|Image):/i,'File:')); else inApp(t); return; }
+    const wm = href.match(/\/w\/index\.php\?(?:.*&)?title=([^&]+)/);
+    if(wm){ const t = decodeURIComponent(wm[1]).replace(/_/g,' ');
+      if(/^(File|Image):/i.test(t)) asFile(t.replace(/^(File|Image):/i,'File:')); else inApp(t); return; }
+    const cm = href.match(/^https?:\/\/commons\.wikimedia\.org\/wiki\/(File:[^?#]+)/i);
+    if(cm){ asFile(decodeURIComponent(cm[1]).replace(/_/g,' ')); return; }
+    if(href.startsWith('//')) { a.setAttribute('href','https:'+href); href='https:'+href; }
+    if(/^https?:/i.test(href)){ a.setAttribute('target','_blank'); a.setAttribute('rel','noopener'); }
+  });
+
+  // TOC
+  const heads = [...root.querySelectorAll('h2,h3')].filter(h=>h.textContent.trim());
+  const shift = (heads[0] && heads[0].tagName === 'H3') ? 1 : 0;
+  const toc = heads.slice(0,40).map(h=>({id:h.id, t:h.textContent.trim(),
+    lvl: (h.tagName==='H3' ? 3 : 2) - shift}));
+  let heroImg = summary?.originalimage?.source || summary?.thumbnail?.source || '';
+  const heroFile = fileFromUrl(heroImg);
+  if(heroFile) await loadCredits([heroFile]);
+  const heroCr = state.credits[normFile(heroFile)];
+  if(heroCr?.thumb) heroImg = heroCr.thumb;
+
+  app().innerHTML = `
+  <div class="wrap">
+    <div class="crumbs"><a onclick="go('#/')">Home</a><span>/</span><span>${esc(state.langName)}</span><span>/</span>
+      <span style="color:var(--ink)">${esc(realTitle)}</span></div>
+    <header class="art-head">
+      <div class="kicker" style="margin-bottom:12px"><span>${esc(desc||'Wikipedia article')}</span></div>
+      <h1>${esc(realTitle)}</h1>
+      <div class="art-meta">
+        <button class="pill" onclick="openHistory(decodeURIComponent('${jsq(realTitle)}'))">Edit history</button>
+        <button class="pill" onclick="openLinksHere(decodeURIComponent('${jsq(realTitle)}'))">What links here</button>
+        <span class="pill mono-pill">${toc.length} sections</span>
+        <span class="pill mono-pill acc">CC BY-SA 4.0</span>
+        ${langlinks.length?`<span class="pill mono-pill">${langlinks.length+1} languages</span>`:''}
+      </div>
+    </header>
+
+    <div class="art-grid">
+      <div>
+        ${heroImg?`<figure class="wp-fig lead-fig" style="margin:0 0 28px"><img src="${heroImg}" alt="">
+          <figcaption><span class="cr"><span class="cr-txt">${creditLine(heroCr, heroFile)}</span>
+          <button class="dl-btn" data-dl="${esc(heroFile)}" data-src="${esc(heroImg)}"
+            data-thumb="${esc(heroCr?.thumb||'')}">↓ Download</button></span></figcaption></figure>`:''}
+        <div class="prose" id="article-body"></div>
+        <div class="errbox" style="background:var(--surface-2);border-style:dashed">
+          <h3 style="font-size:18px">Text &amp; licences</h3>
+          <p>This article is from <b>${esc(state.langName)}</b> Wikipedia, written by its volunteer editors, licensed
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener" style="color:var(--rust)">CC BY-SA 4.0</a>.
+          Images belong to their individual authors — credits are printed under every figure.
+          <button onclick="openHistory(decodeURIComponent('${jsq(realTitle)}'))"
+            style="color:var(--rust);text-decoration:underline;font-size:inherit;padding:0">Full author list</button></p>
+        </div>
+        ${(()=>{
+          const cs = (catsD?.query?.pages?.[0]?.categories||[]).map(c=>c.title.replace(/^[^:]+:/,''));
+          if(!cs.length) return '';
+          return `<section style="margin-top:30px">
+            <div class="sect-head" style="margin:0 0 13px"><h2 style="font-size:21px"><span class="dot-i"></span>Categories</h2>
+              <span class="mono" style="color:var(--dim)">${cs.length} on this article</span></div>
+            <div class="cat-chips">${cs.map(c=>`<button class="cat-chip"
+              onclick="openCategory(decodeURIComponent('${jsq(c)}'))">${esc(c)}</button>`).join('')}</div>
+          </section>`;
+        })()}
+      </div>
+      <aside class="rail">
+        ${toc.length?`<div class="rail-box"><div class="rh"><span class="dot-i"></span>Contents</div>
+          <ol>${toc.map(h=>`<li class="${h.lvl>2?'sub':''}"><a href="#${h.id}" data-toc="${h.id}">${esc(h.t)}</a></li>`).join('')}</ol>
+        </div>`:''}
+        <div class="rail-box"><div class="rh"><span class="dot-i"></span>Languages · ${langlinks.length+1}</div>
+          <button class="lang-list-item" style="display:none"></button>
+          <input class="lang-filter" id="artLangFilter" placeholder="Filter ${langlinks.length+1} languages…"
+            oninput="filterArtLangs(this.value)" autocomplete="off">
+          <div class="lang-list" id="artLangList">
+            <button class="on" onclick="switchLang('${esc(lang)}')">
+              <span>${esc(langNameOf(lang))}</span><small>${esc(lang)}</small></button>
+            ${sortedLL.map(l=>`<button data-k="${esc((langNameOf(l.lang)+' '+l.lang).toLowerCase())}"
+              onclick="switchLang('${esc(l.lang)}')">
+              <span>${esc(langNameOf(l.lang))}</span><small>${esc(l.lang)}</small></button>`).join('')}
+          </div>
+          <div style="margin-top:9px;font-size:11.5px;color:var(--dim);line-height:1.5">
+            All ${langlinks.length+1} language versions of this article. Tap one to read it there.</div>
+        </div>
+        <div class="rail-box"><div class="rh"><span class="dot-i"></span>This page</div>
+          <button class="pill mono-pill" style="width:100%;justify-content:center;margin-bottom:7px"
+            onclick="openHistory(decodeURIComponent('${jsq(realTitle)}'))">Edit history</button>
+          <button class="pill mono-pill" style="width:100%;justify-content:center;margin-bottom:7px"
+            onclick="openLinksHere(decodeURIComponent('${jsq(realTitle)}'))">What links here</button>
+          <button class="pill mono-pill" style="width:100%;justify-content:center"
+            onclick="randomArticle()">Random article</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+  ${footer()}`;
+
+  document.getElementById('article-body').appendChild(root);
+  bindDownloads(app());
+  bindToc();
+  document.title = realTitle + ' — Wikipedia 2.0';
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function filterArtLangs(q){
+  q = String(q||'').toLowerCase().trim();
+  document.querySelectorAll('#artLangList button').forEach(b=>{
+    const k = b.dataset.k || b.innerText.toLowerCase();
+    b.style.display = (!q || k.includes(q)) ? '' : 'none';
+  });
+}
+
+function switchLang(code){
+  const target = titleInLang(code);
+  state.lang = code;
+  const l = (state.langs||[]).find(x=>x.code===code);
+  state.langName = l ? (l.native||l.name) : code;
+  localStorage.setItem('w20-lang', state.lang);
+  localStorage.setItem('w20-lang-name', state.langName);
+  updateLangLabel();
+  if(target) navTo('#/a/' + encodeURIComponent(target));
+  else route();
+}
+
+function bindToc(){
+  const links = [...document.querySelectorAll('[data-toc]')];
+  if(!links.length) return;
+  const obs = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting) links.forEach(l=>l.classList.toggle('on', l.dataset.toc===e.target.id));
+    });
+  }, {rootMargin:'-80px 0px -70% 0px'});
+  document.querySelectorAll('.prose h2, .prose h3').forEach(el=>obs.observe(el));
+}
+
+/* ================= downloads ================= */
+function toast(msg){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2800);
+}
+function cleanName(file, url){
+  let n = String(file||'').replace(/^File:/,'').replace(/_/g,' ').trim();
+  if(!n){ n = decodeURIComponent((String(url||'').split('?')[0].split('/').pop())||'image'); n = n.replace(/^\d+px-/,''); }
+  if(!/\.(jpe?g|png|gif|webp|svg|tiff?)$/i.test(n)) n += '.jpg';
+  return n;
+}
+async function downloadImage(src, file, thumb){
+  let url = thumb || src;
+  const name = cleanName(file, url);
+  toast('Preparing ' + name + '…');
+  try{
+    if(file){
+      try{
+        const d = await commons({action:'query', titles:file, prop:'imageinfo', iiprop:'url', iiurlwidth:'1600'});
+        const ii = (d.query?.pages||[])[0]?.imageinfo?.[0];
+        if(ii?.thumburl) url = ii.thumburl;
+      }catch(e){}
+    }
+    const r = await fetch(url, {mode:'cors'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const blob = await r.blob();
+    const href = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = href; a.download = name; a.style.display = 'none';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(href), 10000);
+    toast('Saved ' + name);
+  }catch(e){
+    window.open(url, '_blank', 'noopener');
+    toast('Opened image in a new tab — save it from there');
+  }
+}
+function bindDownloads(scope){
+  (scope||document).querySelectorAll('[data-dl]:not([data-bound])').forEach(btn=>{
+    btn.setAttribute('data-bound','1');
+    btn.addEventListener('click', e=>{
+      e.preventDefault(); e.stopPropagation();
+      downloadImage(btn.dataset.src||'', btn.dataset.dl||'', btn.dataset.thumb||'');
+    });
+  });
+}
+
+/* ================= in-app overlays ================= */
+let ovT;
+const lastPt = {x:0,y:0,t:0};
+addEventListener('pointerdown', e=>{ lastPt.x=e.clientX; lastPt.y=e.clientY; lastPt.t=Date.now(); }, true);
+function overlay(html){
+  const o = document.getElementById('ovl');
+  clearTimeout(ovT);
+  const again = o.classList.contains('open') && !o.classList.contains('closing');
+  o.classList.remove('closing');
+  o.innerHTML = `<div class="ovl-card${again?' again':''}">${html}</div>`;
+  o.classList.add('open');
+  const card = o.firstChild;
+  if(card && !again){
+    const fresh = Date.now()-lastPt.t < 1500;
+    card.style.setProperty('--ox', fresh ? (lastPt.x-card.offsetLeft)+'px' : '50%');
+    card.style.setProperty('--oy', fresh ? (lastPt.y-card.offsetTop)+'px' : '50%');
+  }
+  document.body.style.overflow = 'hidden';
+}
+function closeOverlay(){
+  const o = document.getElementById('ovl');
+  const fin = ()=>{ o.classList.remove('open','closing'); o.innerHTML=''; document.body.style.overflow=''; };
+  clearTimeout(ovT);
+  if(o.classList.contains('open') && fx.anim){ o.classList.add('closing'); ovT = setTimeout(fin, 340*fx.dur); } else fin();
+}
+function ovlHead(title){
+  return `<div class="ovl-head"><div class="ovl-t">${esc(title)}</div>
+    <button class="ovl-x" onclick="closeOverlay()" aria-label="Close">✕</button></div>`;
+}
+function ovlLoading(title, h){
+  overlay(ovlHead(title) + `<div style="padding:20px"><div class="skel" style="height:${h||240}px"></div></div>`);
+}
+
+async function openImage(fileTitle){
+  if(!fileTitle) return;
+  fileTitle = fileTitle.replace(/^(Image|File):/i, 'File:').replace(/_/g, ' ');
+  ovlLoading(fileTitle.replace(/^File:/,''), 280);
+  try{
+    const d = await commons({action:'query', titles:fileTitle, prop:'imageinfo',
+      iiprop:'url|extmetadata|size|mime', iiurlwidth:'1400'});
+    const p = (d.query?.pages||[])[0], ii = (p?.imageinfo||[])[0];
+    if(!ii){
+      overlay(ovlHead('Not available') + `<div style="padding:24px;font-size:14.5px;color:var(--ink-2)">
+        This file isn't on Wikimedia Commons — it may be hosted on Wikipedia itself or used under a local exemption.</div>`);
+      return;
+    }
+    const em = ii.extmetadata||{};
+    const g = k => String(em[k]?.value||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+    const date = (g('DateTimeOriginal')||g('DateTime')||'').slice(0,10);
+    overlay(`
+      ${ovlHead(fileTitle.replace(/^File:/,'').replace(/_/g,' '))}
+      <div class="ovl-img"><img src="${ii.thumburl||ii.url}" alt=""></div>
+      <div class="ovl-body">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+          <button class="dl-btn" style="height:32px;padding:0 14px;font-size:10px"
+            onclick="downloadImage('${esc(ii.thumburl||ii.url)}','${esc(fileTitle)}','${esc(ii.thumburl||ii.url)}')">↓ Download image</button>
+        </div>
+        <div class="ovl-grid">
+          <div><span class="mono">Author</span><div>${esc(g('Artist')||g('Credit')||'Unknown')}</div></div>
+          <div><span class="mono">Licence</span><div><span class="lic-badge">${esc(g('LicenseShortName')||'See file page')}</span></div></div>
+          <div><span class="mono">Original size</span><div>${nf(ii.width)} × ${nf(ii.height)} px</div></div>
+          <div><span class="mono">Uploaded</span><div>${esc(date||'—')}</div></div>
+        </div>
+        ${g('ImageDescription')?`<p class="ovl-desc">${esc(g('ImageDescription'))}</p>`:''}
+        ${g('UsageTerms')?`<p class="ovl-desc" style="color:var(--dim);font-size:12.5px">${esc(g('UsageTerms'))}</p>`:''}
+        ${g('Credit')&&g('Credit')!==g('Artist')?`<p class="ovl-desc" style="font-size:12.5px">Credit: ${esc(g('Credit'))}</p>`:''}
+      </div>`);
+  }catch(e){
+    overlay(ovlHead('Could not load file') + `<div style="padding:24px;font-size:14.5px;color:var(--ink-2)">${esc(e.message)}</div>`);
+  }
+}
+
+function cleanComment(c){
+  return String(c||'')
+    .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g,'$2')
+    .replace(/\[\[([^\]]+)\]\]/g,'$1')
+    .replace(/\/\*\s*(.*?)\s*\*\//g,'[$1] ')
+    .replace(/\s+/g,' ').trim();
+}
+
+async function openHistory(title){
+  ovlLoading('Edit history — ' + title, 220);
+  try{
+    const d = await wp(state.lang, {action:'query', prop:'revisions', titles:title, rvlimit:'40',
+      rvprop:'user|timestamp|comment|size|ids', rvdir:'older'});
+    const p = (d.query?.pages||[])[0];
+    const revs = p?.revisions || [];
+    if(!revs.length){ overlay(ovlHead('Edit history') + `<div style="padding:24px">No revisions found.</div>`); return; }
+    overlay(ovlHead(`Edit history — ${title}`) + `<div class="ovl-body">
+      <p style="font-size:13px;color:var(--dim);margin:0 0 14px">
+        The ${revs.length} most recent edits in ${esc(state.langName)} Wikipedia. Every name here is one of this
+        article's authors — this is the attribution CC BY-SA 4.0 asks for.</p>
+      ${revs.map(r=>{
+        const t = new Date(r.timestamp);
+        const when = t.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+' · '+
+                     t.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+        return `<div class="rev">
+          <div class="u">${esc(r.user||'Anonymous')}</div>
+          <div class="d">${esc(when)}</div>
+          <div class="c">${esc(cleanComment(r.comment).slice(0,170)||'—')}</div>
+        </div>`;
+      }).join('')}
+    </div>`);
+  }catch(e){
+    overlay(ovlHead('Edit history') + `<div style="padding:24px">${esc(e.message)}</div>`);
+  }
+}
+
+async function openLinksHere(title){
+  ovlLoading('What links here — ' + title, 200);
+  try{
+    const d = await wp(state.lang, {action:'query', list:'backlinks', bltitle:title, bllimit:'50', blnamespace:'0'});
+    const links = d.query?.backlinks || [];
+    overlay(ovlHead(`What links here — ${title}`) + `<div class="ovl-body">
+      ${links.length ? links.map(l=>`<div class="blink" onclick="closeOverlay();go('#/a/${jsq(l.title)}')">
+        <span>${esc(l.title)}</span><span style="font-family:var(--mono);font-size:10px;color:var(--dim)">open →</span></div>`).join('')
+        : '<p style="font-size:14px;color:var(--dim)">No articles link here yet.</p>'}
+    </div>`);
+  }catch(e){
+    overlay(ovlHead('What links here') + `<div style="padding:24px">${esc(e.message)}</div>`);
+  }
+}
+
+/* ================= credits ================= */
+function viewCredits(){
+  return `<div class="wrap">
+    <div class="crumbs"><a onclick="go('#/')">Home</a><span>/</span><span style="color:var(--ink)">Credits</span></div>
+    <header class="cred-head">
+      <h1>Credits &amp; licences</h1>
+      <p>This page contains no content of its own. Every word and every photograph is fetched live from Wikipedia and Wikimedia Commons, and both require attribution — here is how it works.</p>
+    </header>
+
+    <section class="cred-sect">
+      <h2>Text</h2>
+      <p>All article text is written by Wikipedia's volunteer editors and licensed under <b>Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)</b>. You may reuse it, including commercially, if you credit the authors and license any adaptation under the same terms.</p>
+      <p>Every article has an in-app <b>Edit history</b> panel that lists the accounts and IPs that edited it, with timestamps and edit summaries — pulled live from the API. That is the canonical author list, shown without leaving this app.</p>
+    </section>
+
+    <section class="cred-sect">
+      <h2>Images</h2>
+      <p>Photographs and diagrams come from Wikimedia Commons and from the articles themselves. Each file has its own licence — many are CC BY-SA, CC0 or public domain, some are used under fair use. Under every figure in an article you'll find the <b>author name and licence</b>, with a link to the Commons file page where the full terms sit.</p>
+      <p>Picture of the day on the home page carries its author and licence directly, sourced from the Wikimedia REST feed.</p>
+    </section>
+
+    <section class="cred-sect">
+      <h2>What this is</h2>
+      <ul>
+        <li>An independent reading interface built on Wikipedia's public APIs — <span class="mono">api.wikimedia.org</span>, <span class="mono">*.wikipedia.org/w/api.php</span> and the REST API.</li>
+        <li>Not affiliated with, endorsed by, or operated by the Wikimedia Foundation. “Wikipedia” is a trademark of the Wikimedia Foundation and is used here descriptively.</li>
+        <li>Nothing is stored. There is no database, no snapshot, no cache of article text — every view is a live request, so what you read is current.</li>
+        <li>Edits are not possible here. Every link, image, language version and history panel opens inside this app — nothing sends you off to wikipedia.org.</li>
+        <li>Links that point to sources outside Wikimedia (a newspaper, a journal, a government report) still open the real site, because that content lives there, not here.</li>
+      </ul>
+    </section>
+
+    <section class="cred-sect">
+      <h2>Coverage — live numbers</h2>
+      <p>These are read from the API when this page opens, not typed in. Search works across every article in the
+      language you have selected; the category browser reaches every category name in both Wikipedia and Commons.</p>
+      <div class="cov-grid" id="covGrid">
+        <div class="cov-cell"><b>…</b><span>loading</span></div>
+      </div>
+      <p style="font-size:13px;color:var(--dim)">Nothing here is stored or pre-downloaded — each number is a
+      count of what exists upstream, and each one is reachable one request at a time.</p>
+    </section>
+  </div>${footer()}`;
+}
+
+function footer(){
+  return `<footer class="bot wrap">
+    <div class="fnote">Wikipedia 2.0 — a live reading interface, not an archive. Content fetched at request time from
+      Wikipedia (CC BY-SA 4.0) and Wikimedia Commons. Not affiliated with the Wikimedia Foundation.</div>
+    <div class="flinks">
+      <a onclick="go('#/')">Home</a>
+      <a onclick="go('#/life')">Life on Earth</a>
+      <a href="#/credits">Credits</a>
+      <button onclick="randomArticle()">Random</button>
+      <button onclick="toggleLang(event)">Languages</button>
+    </div>
+  </footer>`;
+}
+
+/* ================= life on earth ================= */
+const LIFE_GROUPS = [
+  { title:'Animals', sub:'Every branch of the animal kingdom',
+    cats:['Animals','Vertebrates','Invertebrates','Mammals','Birds','Reptiles','Amphibians','Fish',
+          'Insects','Arachnids','Molluscs','Crustaceans','Dinosaurs','Extinct animals','Marine animals'] },
+  { title:'Dogs & other pets', sub:'Breeds, species and the animals that live with us',
+    cats:['Dogs','Dog breeds','Dog types','Cats','Cat breeds','Horses','Horse breeds','Cattle',
+          'Domesticated animals','Pets','Animal breeds'] },
+  { title:'Birds', sub:'By order, family and species',
+    cats:['Birds','Bird families','Bird genera','Birds by common name','Birds of prey','Water birds',
+          'Parrots','Songbirds','Extinct birds'] },
+  { title:'Creatures & legend', sub:'Animals of myth, fiction and folklore',
+    cats:['Legendary creatures','Mythological creatures','Cryptids','Fictional animals',
+          'Dragons','Sea monsters'] },
+  { title:'Species & taxonomy', sub:'The classification tree itself',
+    cats:['Species','Taxonomy (biology)','Lists of animals','Animal stubs','Endangered species'] }
+];
+const LIFE_ALL = [...new Set(LIFE_GROUPS.flatMap(g=>g.cats))];
+
+async function resolveCats(names){
+  if(state.lang === 'en'){ const o={}; names.forEach(n=>o[n]=n); return o; }
+  const key = 'w20-life-' + state.lang;
+  const cached = localStorage.getItem(key);
+  if(cached){ try{ const o = JSON.parse(cached); if(names.every(n=>o[n])) return o; }catch(e){} }
+  const out = {};
+  try{
+    for(let i=0;i<names.length;i+=40){
+      const chunk = names.slice(i,i+40).map(n=>'Category:'+n).join('|');
+      const d = await wp('en', {action:'query', prop:'langlinks', titles:chunk, lllang:state.lang, lllimit:'max'});
+      (d.query?.pages||[]).forEach(pg=>{
+        const base = pg.title.replace(/^[^:]+:/,'');
+        const ll = (pg.langlinks||[])[0];
+        out[base] = ll ? ll.title.replace(/^[^:]+:/,'') : base;
+      });
+    }
+    names.forEach(n=>{ if(!out[n]) out[n]=n; });
+    localStorage.setItem(key, JSON.stringify(out));
+  }catch(e){ names.forEach(n=>out[n]=n); }
+  return out;
+}
+
+async function catCounts(names, lang){
+  const L = lang || state.lang;
+  const info = {};
+  try{
+    for(let i=0;i<names.length;i+=50){
+      const d = await wp(L, {action:'query', prop:'categoryinfo',
+        titles: names.slice(i,i+50).map(n=>'Category:'+n).join('|')});
+      (d.query?.pages||[]).forEach(pg=>{
+        info[pg.title.replace(/^[^:]+:/,'')] = pg.categoryinfo || {};
+      });
+    }
+  }catch(e){}
+  return info;
+}
+
+async function viewLife(){
+  app().innerHTML = `<div class="wrap"><div class="crumbs"><a onclick="go('#/')">Home</a><span>/</span>
+    <span style="color:var(--ink)">Life on Earth</span></div>
+    <header class="art-head"><div class="kicker" style="margin-bottom:10px"><span>Browse</span></div>
+      <h1>Life on Earth</h1>
+      <p class="desc">Animals, birds, dogs and every species beneath them — each one a live Wikipedia
+      category you can drill into, down to breeds and individual species.</p></header>
+    <div class="skel" style="height:180px;margin-bottom:18px"></div>
+    <div class="skel" style="height:180px"></div></div>`;
+
+  const map = await resolveCats(LIFE_ALL);
+  const local = LIFE_ALL.map(n=>map[n]||n);
+  const counts = await catCounts(local);
+  let enCounts = {};
+  if(state.lang !== 'en'){
+    const blanks = LIFE_ALL.filter(en=>{
+      const c = counts[map[en]] || {};
+      return !(c.pages||c.subcats||c.files);
+    });
+    if(blanks.length) enCounts = await catCounts(blanks, 'en');
+  }
+
+  app().innerHTML = `
+  <div class="wrap">
+    <div class="crumbs"><a onclick="go('#/')">Home</a><span>/</span><span style="color:var(--ink)">Life on Earth</span></div>
+    <header class="art-head">
+      <div class="kicker" style="margin-bottom:10px"><span>Browse · ${esc(state.langName)}</span></div>
+      <h1>Life on Earth</h1>
+      <p class="desc">Animals, birds, dogs and every species beneath them — each tile is a live
+      Wikipedia category. Tap one to see its pages, its subcategories and its images on Commons.</p>
+      <div class="art-meta">
+        <span class="pill mono-pill">${LIFE_ALL.length} categories</span>
+        <button class="pill mono-pill" onclick="openAllCategories('wiki')">All Wikipedia categories</button>
+        <button class="pill mono-pill" onclick="openAllCategories('commons')">All Commons categories</button>
+        <button class="pill mono-pill" onclick="randomArticle()">Random article</button>
+      </div>
+    </header>
+    ${LIFE_GROUPS.map(g=>`
+      <section class="life-group">
+        <h3><span class="dot-i"></span>${esc(g.title)}
+          <span style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-left:4px">${esc(g.sub)}</span></h3>
+        <div class="cat-grid">
+          ${g.cats.map(en=>{
+            const ln = map[en] || en;
+            const c = counts[ln] || {};
+            const p = c.pages||0, sc = c.subcats||0, f = c.files||0;
+            const empty = (!p && !sc && !f);
+            const e = enCounts[en] || {};
+            const enHas = !!(e.pages || e.subcats || e.files);
+            if(empty && enHas){
+              return `<div class="cat-tile" onclick="go('#/c-en/${jsq(en)}')">
+                <div class="cn">${esc(en)}</div>
+                <div class="cc">${nf(e.pages||0)} pages · English</div></div>`;
+            }
+            return `<div class="cat-tile ${empty?'dim':''}" onclick="openCategory(decodeURIComponent('${jsq(ln)}'))">
+              <div class="cn">${esc(ln)}</div>
+              <div class="cc">${empty?'no entries in this language':`${nf(p)} pages${sc?' · '+nf(sc)+' subcats':''}${f?' · '+nf(f)+' files':''}`}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </section>`).join('')}
+  </div>
+  ${footer()}`;
+  window.scrollTo({top:0,behavior:'instant'});
+  document.title = 'Life on Earth — Wikipedia 2.0';
+}
+
+let countsMemo = null;
+async function fetchCounts(){
+  const key = 'w20-counts-' + state.lang;
+  if(countsMemo && countsMemo.lang === state.lang) return countsMemo.v;
+  try{
+    const c = JSON.parse(localStorage.getItem(key) || 'null');
+    if(c && Date.now() - c.t < 3600000){ countsMemo = {lang:state.lang, v:c.v}; return c.v; }
+  }catch(e){}
+  let v = {};
+  try{
+    const [w, cm] = await Promise.all([
+      wp(state.lang, {action:'query', meta:'siteinfo', siprop:'statistics'}).catch(()=>null),
+      commons({action:'query', meta:'siteinfo', siprop:'statistics'}).catch(()=>null)
+    ]);
+    const ws = w?.query?.statistics || {}, cs = cm?.query?.statistics || {};
+    v = { articles: ws.articles||0, pages: ws.pages||0, edits: ws.edits||0, images: ws.images||0,
+          users: ws.users||0, cimages: cs.images||0, cpages: cs.pages||0, cedges: cs.edits||0,
+          editions: (state.langs||[]).length || 0 };
+    localStorage.setItem(key, JSON.stringify({t:Date.now(), v}));
+  }catch(e){}
+  countsMemo = {lang:state.lang, v};
+  return v;
+}
+
+async function fillTopStats(){
+  const box = document.getElementById('topStats');
+  if(!box) return;
+  const v = await fetchCounts();
+  if(!v || !v.articles){ box.innerHTML = '<div class="ts-cell skelcell">counts unavailable</div>'; return; }
+  const cells = [
+    [v.articles, `articles · ${state.langName}`],
+    [v.pages,    `pages · ${state.langName}`],
+    [v.edits,    `edits · ${state.langName}`],
+    [v.cimages,  'Commons files'],
+    [v.editions, 'language editions']
+  ];
+  box.innerHTML = cells.map(([n,l])=>`<div class="ts-cell"><b>${nf(n)}</b><span>${esc(l)}</span></div>`).join('');
+  const note = document.getElementById('tsNote');
+  if(note) note.textContent = `Live counts · ${state.langName} Wikipedia and Wikimedia Commons · switch language to change them`;
+}
+
+async function fillCoverage(){
+  const grid = document.getElementById('covGrid');
+  if(!grid) return;
+  const cells = [];
+  try{
+    const v = await fetchCounts();
+    if(v.articles) cells.push([nf(v.articles), `articles · ${state.langName}`]);
+    if(v.pages) cells.push([nf(v.pages), `pages · ${state.langName}`]);
+    if(v.edits) cells.push([nf(v.edits), `edits · ${state.langName}`]);
+    if(v.users) cells.push([nf(v.users), 'registered editors']);
+    if(v.cimages) cells.push([nf(v.cimages), 'Commons files']);
+    if(v.cpages) cells.push([nf(v.cpages), 'Commons pages']);
+    if(v.cedges) cells.push([nf(v.cedges), 'Commons edits']);
+    if(v.editions) cells.push([nf(v.editions), 'language editions']);
+  }catch(e){}
+  if(!cells.length){ grid.innerHTML = '<div class="cov-cell"><b>—</b><span>could not load</span></div>'; return; }
+  grid.innerHTML = cells.map(([n,l])=>`<div class="cov-cell"><b>${n}</b><span>${esc(l)}</span></div>`).join('');
+}
+
+/* ================= categories ================= */
+const ROOT_CAT = 'Category:Main topic classifications';
+let rootMap = null;
+
+async function localRootTitle(lang){
+  if(lang === 'en') return ROOT_CAT;
+  if(!rootMap){
+    try{
+      const d = await wp('en', {action:'query', prop:'langlinks', titles:ROOT_CAT, lllimit:'max'});
+      rootMap = {};
+      (d.query?.pages?.[0]?.langlinks||[]).forEach(l=>{ rootMap[l.lang] = l.title; });
+      localStorage.setItem('w20-rootmap', JSON.stringify(rootMap));
+    }catch(e){ rootMap = {}; }
+  }
+  return rootMap[lang] || '';
+}
+
+async function rootCategories(lang){
+  const key = 'w20-roots2-' + lang;
+  const cached = localStorage.getItem(key);
+  if(cached){ try{ const a = JSON.parse(cached); if(a.length) return a; }catch(e){} }
+  let out = [];
+  try{
+    const t = await localRootTitle(lang);
+    if(t){
+      const d = await wp(lang, {action:'query', list:'categorymembers', cmtitle:t, cmlimit:'40', cmtype:'subcat'});
+      out = (d.query?.categorymembers||[]).map(c=>c.title.replace(/^[^:]+:/,''));
+    }
+  }catch(e){}
+  if(!out.length){
+    try{
+      const d = await wp(lang, {action:'query', list:'allcategories', aclimit:'36'});
+      out = (d.query?.allcategories||[]).map(c=>c.category);
+    }catch(e){}
+  }
+  if(out.length){
+    try{
+      const d = await wp(lang, {action:'query', prop:'categoryinfo',
+        titles: out.slice(0,50).map(t=>'Category:'+t).join('|')});
+      const info = {};
+      (d.query?.pages||[]).forEach(pg=>{
+        info[pg.title.replace(/^[^:]+:/,'')] = pg.categoryinfo || {};
+      });
+      out = out.map(n=>({name:n, pages:info[n]?.pages||0, subcats:info[n]?.subcats||0}));
+    }catch(e){ out = out.map(n=>({name:n, pages:0, subcats:0})); }
+    localStorage.setItem(key, JSON.stringify(out));
+  }
+  return out;
+}
+
+function catSection(roots){
+  if(!roots || !roots.length) return '';
+  return `<section>
+    <div class="sect-head"><h2><span class="dot-i"></span>Browse by category</h2>
+      <span class="mono" style="color:var(--dim)">${esc(state.langName)} · ${roots.length} branches</span></div>
+    <div class="cat-grid">
+      ${roots.slice(0,24).map(c=>`<div class="cat-tile" onclick="openCategory(decodeURIComponent('${jsq(c.name)}'))">
+        <div class="cn">${esc(c.name)}</div>
+        <div class="cc">${c.pages?nf(c.pages)+' pages':''}${c.subcats?' · '+nf(c.subcats)+' subcats':''}${(!c.pages&&!c.subcats)?'empty':''}</div></div>`).join('')}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+      <button class="more-btn" style="margin-top:20px" onclick="openAllCategories('wiki')">All Wikipedia categories →</button>
+      <button class="more-btn" style="margin-top:20px" onclick="openAllCategories('commons')">All Commons categories →</button>
+    </div>
+  </section>`;
+}
+
+function openCategory(name){ go('#/c/' + encodeURIComponent(name)); }
+
+/* ---- one category ---- */
+const catState = { title:'', cont:null, mediaShown:0, items:0 };
+
+async function viewCategory(rawName, langOverride){
+  const L = langOverride || state.lang;
+  const LName = langOverride ? ((state.langs||[]).find(x=>x.code===langOverride)?.native || langOverride) : state.langName;
+  const name = rawName.replace(/^[^:]+:/, '');
+  const catTitle = 'Category:' + name;
+  catState.title = catTitle; catState.cont = null; catState.items = 0; catState.lang = L;
+  app().innerHTML = `<div class="wrap"><div class="crumbs"><a onclick="go('#/')">Home</a><span>/</span>
+    <span>Category</span></div>
+    <header class="art-head"><div class="kicker" style="margin-bottom:10px"><span>Category</span></div>
+      <h1>${esc(name)}</h1></header>
+    <div class="skel" style="height:200px;margin-bottom:16px"></div>
+    <div class="skel" style="height:200px"></div></div>`;
+
+  let subs = [], pagesD = {}, mediaD = {}, info = null;
+  const results = await Promise.all([
+    wp(L, {action:'query', list:'categorymembers', cmtitle:catTitle, cmlimit:'24', cmtype:'subcat'}).catch(()=>null),
+    wp(L, {action:'query', generator:'categorymembers', gcmtitle:catTitle, gcmlimit:'24',
+      gcmnamespace:'0', prop:'pageimages|description|categoryinfo', piprop:'thumbnail', pithumbsize:'320'}).catch(()=>null),
+    commons({action:'query', generator:'categorymembers', gcmtitle:catTitle, gcmlimit:'18', gcmnamespace:'6',
+      prop:'imageinfo', iiprop:'url|extmetadata', iiurlwidth:'420'}).catch(()=>null),
+    wp(L, {action:'query', titles:catTitle, prop:'categoryinfo'}).catch(()=>null)
+  ]);
+  subs = (results[0]?.query?.categorymembers||[]).map(c=>c.title.replace(/^[^:]+:/,''));
+  pagesD = results[1] || {};
+  mediaD = results[2] || {};
+  info = (results[3]?.query?.pages||[])[0]?.categoryinfo || null;
+
+  const pages = Object.values(pagesD.query?.pages||{});
+  catState.cont = pagesD.continue || null;
+
+  const media = Object.values(mediaD.query?.pages||{}).filter(p=>p.imageinfo?.[0]?.thumburl).slice(0,12);
+  const total = info ? (info.pages||0) : pages.length;
+
+  app().innerHTML = `
+  <div class="wrap">
+    <div class="crumbs"><a onclick="go('#/')">Home</a><span>/</span><span style="color:var(--ink)">Category</span></div>
+    <header class="art-head">
+      <div class="kicker" style="margin-bottom:10px"><span>Category · ${esc(LName)}${langOverride&&langOverride!==state.lang?' · English fallback':''}</span></div>
+      <h1>${esc(name)}</h1>
+      <div class="art-meta">
+        <span class="pill mono-pill">${nf(total)} pages</span>
+        ${info?.subcats?`<span class="pill mono-pill">${nf(info.subcats)} subcategories</span>`:''}
+        ${info?.files?`<span class="pill mono-pill">${nf(info.files)} files</span>`:''}
+        <button class="pill mono-pill" onclick="openAllCategories()">Change category</button>
+      </div>
+    </header>
+
+    ${subs.length?`<section style="margin-bottom:30px">
+      <div class="sect-head" style="margin:0 0 14px"><h2 style="font-size:22px"><span class="dot-i"></span>Subcategories</h2></div>
+      <div class="cat-chips">${subs.map(c=>`<button class="cat-chip"
+        onclick="openCategory(decodeURIComponent('${jsq(c)}'))">${esc(c)}</button>`).join('')}</div>
+    </section>`:''}
+
+    <section>
+      <div class="sect-head" style="margin:0 0 16px"><h2 style="font-size:22px"><span class="dot-i"></span>Pages</h2>
+        <span class="mono" style="color:var(--dim)">${pages.length} shown</span></div>
+      <div class="res-grid" id="cat-pages">${pages.map(pageCard).join('') ||
+        '<p style="color:var(--dim);font-size:14px;grid-column:1/-1">No articles directly in this category — look in the subcategories above.</p>'}</div>
+      <div id="cat-more">${catState.cont?'<button class="more-btn" onclick="loadMoreCat()">Load more →</button>':''}</div>
+    </section>
+
+    ${media.length?`<section style="margin-top:40px">
+      <div class="sect-head" style="margin:0 0 16px"><h2 style="font-size:22px"><span class="dot-i"></span>Media on Wikimedia Commons</h2>
+        <span class="mono" style="color:var(--dim)">${media.length} files</span></div>
+      <div class="res-grid">
+        ${media.map(p=>{
+          const ii = p.imageinfo[0];
+          const em = ii.extmetadata||{};
+          const g = k => String(em[k]?.value||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+          const fn = p.title.replace(/^File:/,'').replace(/_/g,' ');
+          return `<div class="res-card" onclick="openImage(decodeURIComponent('${jsq(p.title)}'))">
+            <div class="th"><img src="${ii.thumburl}" alt="" loading="lazy"></div>
+            <div class="bd"><b>${esc(fn)}</b><span>${esc(g('Artist')||'Unknown')} · ${esc(g('LicenseShortName')||'')}</span></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </section>`:''}
+  </div>
+  ${footer()}`;
+  bindDownloads(app());
+  window.scrollTo({top:0,behavior:'instant'});
+  document.title = name + ' — Category · Wikipedia 2.0';
+}
+
+function pageCard(p){
+  const img = p.thumbnail?.source;
+  return `<div class="res-card" onclick="go('#/a/${jsq(p.title)}')">
+    ${img?`<div class="th"><img src="${img}" alt="" loading="lazy"></div>`:''}
+    <div class="bd"><b>${esc(p.title)}</b><span>${esc(p.description||'')}</span></div></div>`;
+}
+
+async function loadMoreCat(){
+  if(!catState.cont) return;
+  const btn = document.querySelector('#cat-more .more-btn');
+  if(btn){ btn.textContent = 'Loading…'; btn.disabled = true; }
+  try{
+    const d = await wp(catState.lang || state.lang, Object.assign({action:'query', generator:'categorymembers',
+      gcmtitle:catState.title, gcmnamespace:'0', prop:'pageimages|description', piprop:'thumbnail', pithumbsize:'320'},
+      catState.cont));
+    const pages = Object.values(d.query?.pages||{});
+    catState.cont = d.continue || null;
+    const grid = document.getElementById('cat-pages');
+    pages.forEach(p=>{ const div = document.createElement('div'); div.innerHTML = pageCard(p); grid.appendChild(div.firstElementChild); });
+    document.getElementById('cat-more').innerHTML = catState.cont
+      ? '<button class="more-btn" onclick="loadMoreCat()">Load more →</button>' : '';
+  }catch(e){
+    document.getElementById('cat-more').innerHTML = '<p style="color:var(--dim);font-size:13px">Could not load more.</p>';
+  }
+}
+
+/* ---- every category, Wikipedia + Commons ---- */
+const catB = { source:'wiki', q:'', cont:null, busy:false };
+
+function openAllCategories(source){
+  catB.source = source === 'commons' ? 'commons' : 'wiki';
+  catB.q = ''; catB.cont = null;
+  overlay(ovlHead('Every category') + `<div class="ovl-body">
+    <div class="cat-tabs">
+      <button id="tab-wiki" class="${catB.source==='wiki'?'on':''}" onclick="catTab('wiki')">Wikipedia</button>
+      <button id="tab-commons" class="${catB.source==='commons'?'on':''}" onclick="catTab('commons')">Wikimedia Commons</button>
+    </div>
+    <input id="catSearch" class="lang-filter" style="margin:0 0 12px;height:40px;font-size:14px"
+      placeholder="Search or type a prefix — every category is reachable" autocomplete="off"
+      oninput="catQuery(this.value)">
+    <div id="catList"><div class="skel" style="height:200px"></div></div>
+    <div id="catMore"></div>
+  </div>`);
+  const inp = document.getElementById('catSearch');
+  if(inp) inp.focus();
+  catLoad(true);
+}
+
+function catTab(src){
+  catB.source = src; catB.cont = null;
+  document.getElementById('tab-wiki')?.classList.toggle('on', src==='wiki');
+  document.getElementById('tab-commons')?.classList.toggle('on', src==='commons');
+  catLoad(true);
+}
+
+let catTimer = null;
+function catQuery(v){
+  clearTimeout(catTimer);
+  catTimer = setTimeout(()=>{ catB.q = String(v||'').trim(); catB.cont = null; catLoad(true); }, 320);
+}
+
+async function catLoad(reset){
+  if(catB.busy) return;
+  catB.busy = true;
+  const list = document.getElementById('catList');
+  const more = document.getElementById('catMore');
+  if(!list){ catB.busy = false; return; }
+  if(reset){ list.innerHTML = '<div class="skel" style="height:180px"></div>'; if(more) more.innerHTML=''; }
+  else if(more) more.innerHTML = '<div class="cat-more" style="display:grid;place-items:center">Loading…</div>';
+
+  const isC = catB.source === 'commons';
+  const api = isC ? commons : (params)=>wp(state.lang, params);
+  const q = catB.q;
+  let params;
+  if(q){
+    params = { action:'query', list:'search', srsearch:q, srnamespace:'14', srlimit:'40', srprop:'' };
+  } else {
+    params = { action:'query', list:'allcategories', aclimit:'60' };
+  }
+  if(catB.cont) Object.assign(params, catB.cont);
+
+  try{
+    const d = await api(params);
+    let rows = [];
+    if(q) rows = (d.query?.search||[]).map(x=>x.title.replace(/^[^:]+:/,''));
+    else rows = (d.query?.allcategories||[]).map(x=>x.category);
+    catB.cont = d.continue || null;
+
+    const html = rows.map(n=>`<div class="cat-row" onclick="closeOverlay();${isC?'openCommonsCategory':'openCategory'}(decodeURIComponent('${jsq(n)}'))">
+        <span class="cn">${esc(n)}</span><span class="go">${isC?'files':'open'} →</span></div>`).join('');
+
+    if(reset) list.innerHTML = html || `<p style="font-size:14px;color:var(--dim)">Nothing found for “${esc(q)}”.</p>`;
+    else list.insertAdjacentHTML('beforeend', html);
+
+    if(more) more.innerHTML = catB.cont
+      ? `<button class="cat-more" onclick="catLoad(false)">Load more →</button>`
+      : (rows.length ? `<p style="font-size:12px;color:var(--dim);text-align:center;padding-top:12px">
+          End of this page — refine your search to reach deeper.</p>` : '');
+  }catch(e){
+    if(reset) list.innerHTML = `<p style="font-size:14px;color:var(--dim)">Could not load categories: ${esc(e.message)}</p>`;
+    if(more) more.innerHTML = '';
+  }
+  catB.busy = false;
+}
+
+/* ---- Commons categories ---- */
+const ccState = { title:'', cont:null };
+
+async function viewCommonsCategory(rawName){
+  const name = rawName.replace(/^[^:]+:/, '');
+  const catTitle = 'Category:' + name;
+  ccState.title = catTitle; ccState.cont = null;
+  app().innerHTML = `<div class="wrap"><div class="crumbs"><a onclick="go('#/')">Home</a><span>/</span>
+    <span>Commons category</span></div>
+    <header class="art-head"><h1>${esc(name)}</h1></header>
+    <div class="skel" style="height:220px"></div></div>`;
+
+  const [subs, files, info] = await Promise.all([
+    commons({action:'query', list:'categorymembers', cmtitle:catTitle, cmlimit:'30', cmtype:'subcat'}).catch(()=>null),
+    commons({action:'query', generator:'categorymembers', gcmtitle:catTitle, gcmnamespace:'6', gcmlimit:'30',
+      prop:'imageinfo', iiprop:'url|extmetadata|size', iiurlwidth:'420'}).catch(()=>null),
+    commons({action:'query', titles:catTitle, prop:'categoryinfo'}).catch(()=>null)
+  ]);
+  const subNames = (subs?.query?.categorymembers||[]).map(c=>c.title.replace(/^[^:]+:/,''));
+  const items = Object.values(files?.query?.pages||{}).filter(p=>p.imageinfo?.[0]);
+  ccState.cont = files?.continue || null;
+  const ci = (info?.query?.pages||[])[0]?.categoryinfo || {};
+
+  app().innerHTML = `
+  <div class="wrap">
+    <div class="crumbs"><a onclick="go('#/')">Home</a><span>/</span><span style="color:var(--ink)">Commons category</span></div>
+    <header class="art-head">
+      <div class="kicker" style="margin-bottom:10px"><span>Wikimedia Commons</span></div>
+      <h1>${esc(name)}</h1>
+      <div class="art-meta">
+        <span class="pill mono-pill">${nf(ci.files||items.length)} files</span>
+        ${ci.subcats?`<span class="pill mono-pill">${nf(ci.subcats)} subcategories</span>`:''}
+        <button class="pill mono-pill" onclick="openAllCategories('commons')">Change category</button>
+      </div>
+    </header>
+    ${subNames.length?`<section style="margin-bottom:28px">
+      <div class="sect-head" style="margin:0 0 13px"><h2 style="font-size:21px"><span class="dot-i"></span>Subcategories</h2></div>
+      <div class="cat-chips">${subNames.map(c=>`<button class="cat-chip"
+        onclick="openCommonsCategory(decodeURIComponent('${jsq(c)}'))">${esc(c)}</button>`).join('')}</div>
+    </section>`:''}
+    <section>
+      <div class="sect-head" style="margin:0 0 16px"><h2 style="font-size:21px"><span class="dot-i"></span>Files</h2>
+        <span class="mono" style="color:var(--dim)">${items.length} shown</span></div>
+      <div class="res-grid" id="cc-grid">${items.map(fileCard).join('') ||
+        '<p style="color:var(--dim);font-size:14px;grid-column:1/-1">No files directly here — look in the subcategories.</p>'}</div>
+      <div id="cc-more">${ccState.cont?'<button class="more-btn" onclick="loadMoreCommons()">Load more →</button>':''}</div>
+    </section>
+  </div>
+  ${footer()}`;
+  window.scrollTo({top:0,behavior:'instant'});
+  document.title = name + ' — Commons · Wikipedia 2.0';
+}
+
+function fileCard(p){
+  const ii = p.imageinfo[0], em = ii.extmetadata||{};
+  const g = k => String(em[k]?.value||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+  const fn = p.title.replace(/^File:/,'').replace(/_/g,' ');
+  return `<div class="res-card" onclick="openImage(decodeURIComponent('${jsq(p.title)}'))">
+    <div class="th"><img src="${ii.thumburl||ii.url}" alt="" loading="lazy"></div>
+    <div class="bd"><b>${esc(fn)}</b><span>${esc(g('Artist')||'Unknown')} · ${esc(g('LicenseShortName')||'')}</span></div>
+  </div>`;
+}
+
+async function loadMoreCommons(){
+  if(!ccState.cont) return;
+  const btn = document.querySelector('#cc-more .more-btn');
+  if(btn){ btn.textContent='Loading…'; btn.disabled = true; }
+  try{
+    const d = await commons(Object.assign({action:'query', generator:'categorymembers', gcmtitle:ccState.title,
+      gcmnamespace:'6', prop:'imageinfo', iiprop:'url|extmetadata|size', iiurlwidth:'420'}, ccState.cont));
+    const items = Object.values(d.query?.pages||{}).filter(p=>p.imageinfo?.[0]);
+    ccState.cont = d.continue || null;
+    const grid = document.getElementById('cc-grid');
+    items.forEach(p=>{ const div=document.createElement('div'); div.innerHTML=fileCard(p); grid.appendChild(div.firstElementChild); });
+    document.getElementById('cc-more').innerHTML = ccState.cont
+      ? '<button class="more-btn" onclick="loadMoreCommons()">Load more →</button>' : '';
+  }catch(e){ document.getElementById('cc-more').innerHTML=''; }
+}
+
+function openCommonsCategory(n){ go('#/cc/' + encodeURIComponent(String(n).replace(/^[^:]+:/,''))); }
+
+/* ================= language menu ================= */
+function toggleMore(e){
+  if(e) e.stopPropagation();
+  const m = document.getElementById('moreMenu');
+  if(m.classList.contains('open')){ m.classList.remove('open'); return; }
+  document.getElementById('langMenu').classList.remove('open');
+  const dark = (document.documentElement.getAttribute('data-theme')
+    || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark';
+  m.innerHTML = `
+    <div class="mh">Options</div>
+    <div class="mi" onclick="event.stopPropagation();openFxPanel()"><span>Glass, depth &amp; motion</span><small>adjust ›</small></div>
+    <div class="mi" onclick="document.getElementById('moreMenu').classList.remove('open');toggleLang(event)">
+      <span>Change language</span><small>${esc(state.langName)}</small></div>
+    <div class="mi" onclick="toggleTheme();toggleMore()">
+      <span>${dark?'Light mode':'Dark mode'}</span><small>${dark?'☀':'☾'}</small></div>
+    <div class="mi" onclick="document.getElementById('moreMenu').classList.remove('open');go('#/life')">
+      <span>Life on Earth</span><small>animals</small></div>
+    <div class="mi" onclick="document.getElementById('moreMenu').classList.remove('open');openAllCategories('wiki')">
+      <span>All categories</span><small>wikipedia</small></div>
+    <div class="mi" onclick="document.getElementById('moreMenu').classList.remove('open');openAllCategories('commons')">
+      <span>Commons categories</span><small>files</small></div>
+    <div class="mi" onclick="document.getElementById('moreMenu').classList.remove('open');location.hash='#/credits'">
+      <span>Credits &amp; licences</span><small>cc by-sa</small></div>`;
+  m.classList.add('open');
+}
+
+async function toggleLang(e){
+  if(e) e.stopPropagation();
+  const m = document.getElementById('langMenu');
+  if(m.classList.contains('open')){ m.classList.remove('open'); return; }
+  m.classList.add('open');
+  m.innerHTML = '<div class="mh">Loading languages…</div>';
+  const langs = await loadLangs();
+  m.innerHTML = `<div class="mh">Reading language</div>
+    <input id="langSearch" placeholder="Filter ${langs.length} languages…" oninput="filterLangs(this.value)">
+    <div id="langItems">${langs.map(l=>`
+      <div class="mi ${l.code===state.lang?'on':''}" data-code="${l.code}" data-name="${esc((l.native||'')+' '+(l.name||'')+' '+l.code)}"
+           onclick="pickLang('${l.code}','${esc(l.native||l.name)}')">
+        <span>${esc(l.native||l.name)}</span><small>${esc(l.name||l.code)}</small></div>`).join('')}</div>
+    <div class="mf">Every open Wikipedia edition · ${langs.length} languages</div>`;
+  document.getElementById('langSearch')?.focus();
+}
+function filterLangs(q){
+  q = q.toLowerCase();
+  document.querySelectorAll('#langItems .mi').forEach(el=>{
+    el.style.display = el.dataset.name.toLowerCase().includes(q) || el.dataset.code.includes(q) ? '' : 'none';
+  });
+}
+function pickLang(code, name){
+  document.getElementById('langMenu').classList.remove('open');
+  const onArticle = location.hash.startsWith('#/a/');
+  const target = onArticle ? titleInLang(code) : '';
+  state.lang = code; state.langName = name;
+  localStorage.setItem('w20-lang', code); localStorage.setItem('w20-lang-name', name);
+  updateLangLabel();
+  if(target){ navTo('#/a/' + encodeURIComponent(target)); return; }
+  navTo('#/');
+}
+function updateLangLabel(){ document.getElementById('langLabel').textContent = state.langName; }
+
+/* ================= misc ================= */
+function toggleTheme(){
+  const cur = document.documentElement.getAttribute('data-theme')
+    || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light');
+  const next = cur==='dark' ? 'light':'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('w20-theme', next);
+}
+async function randomArticle(){
+  app().innerHTML = `<div class="wrap"><div style="padding:60px 0"><div class="skel" style="height:200px"></div></div></div>`;
+  try{
+    const d = await wp(state.lang, {action:'query', list:'random', rnlimit:'1', rnnamespace:'0'});
+    const t = d.query?.random?.[0]?.title;
+    if(!t) throw new Error('no random article');
+    go('#/a/'+encodeURIComponent(t));
+  }catch(e){
+    go('#/'); setTimeout(()=>viewHome(),10);
+  }
+}
+function go(h){ location.hash = h; }
+function navTo(h){ if(location.hash === h) route(); else location.hash = h; }
+function titleInLang(code){
+  const l = (currentLanglinks||[]).find(x=>x.lang === code);
+  return l && l.title ? l.title : '';
+}
+let rtT;
+function route(){
+  const a = app();
+  if(!fx.anim || !a.firstChild){ routeCore(); return; }
+  const r = a.getBoundingClientRect(), fresh = Date.now()-lastPt.t < 1500;
+  a.style.setProperty('--ox', fresh ? (lastPt.x-r.left)+'px' : '50%');
+  a.style.setProperty('--oy', fresh ? (lastPt.y-r.top)+'px' : '20%');
+  a.classList.remove('opening'); a.classList.add('leaving'); clearTimeout(rtT);
+  rtT = setTimeout(()=>{
+    a.classList.remove('leaving'); routeCore();
+    void a.offsetWidth; a.classList.add('opening');
+    setTimeout(()=>a.classList.remove('opening'), 800*fx.dur);
+  }, 170*fx.dur);
+}
+function routeCore(){
+  const h = location.hash || '#/';
+  if(!h.startsWith('#/a/')) currentLanglinks = [];
+  if(h.startsWith('#/a/')){
+    const t = decodeURIComponent(h.slice(4));
+    if(/^File:/i.test(t)){ if(!document.querySelector('.art-head')) viewHome(); setTimeout(()=>openImage(t),250); return; }
+    if(/^Category:/i.test(t)){ go('#/c/' + encodeURIComponent(t.replace(/^Category:/,''))); return; }
+    if(/^Special:/i.test(t)){
+      if(/random/i.test(t)) return randomArticle();
+      if(/search/i.test(t)){ document.getElementById('q')?.focus(); return; }
+      go('#/'); return;
+    }
+    viewArticle(t);
+  }
+  else if(h.startsWith('#/life')) { viewLife(); }
+  else if(h.startsWith('#/cc/')) { viewCommonsCategory(decodeURIComponent(h.slice(5))); }
+  else if(h.startsWith('#/c-en/')) { viewCategory(decodeURIComponent(h.slice(7)), 'en'); }
+  else if(h.startsWith('#/c/')) { viewCategory(decodeURIComponent(h.slice(4))); }
+  else if(h.startsWith('#/credits')) { app().innerHTML = viewCredits(); window.scrollTo({top:0}); fillCoverage(); }
+  else { viewHome(); window.scrollTo({top:0}); }
+  document.title = h.startsWith('#/a/') ? 'Article — Wikipedia 2.0' : 'Wikipedia 2.0 — live';
+}
+
+document.addEventListener('click', ()=>{
+  document.getElementById('langMenu').classList.remove('open');
+  document.getElementById('moreMenu').classList.remove('open');
+});
+document.getElementById('q').addEventListener('input', onSearchInput);
+document.addEventListener('keydown', e=>{
+  if(e.key==='/' && document.activeElement.tagName!=='INPUT'){ e.preventDefault(); document.getElementById('q').focus(); }
+  if(e.key==='Escape'){ document.getElementById('langMenu').classList.remove('open');
+    document.getElementById('moreMenu').classList.remove('open'); closeOverlay(); }
+});
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const p = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight);
+  document.getElementById('prog').style.width = (p*100).toFixed(1)+'%';
+});
+window.addEventListener('hashchange', route);
+
+window.addEventListener('error', e=>{
+  try{ toast('Something went wrong: ' + (e.message||'unknown error')); }catch(_){}
+});
+window.addEventListener('unhandledrejection', e=>{
+  try{ toast('Request failed: ' + ((e.reason && e.reason.message) || 'network error')); }catch(_){}
+});
+
+/* ================= FX engine ================= */
+const FXD = {zoom:1,zs:12,glass:1,blur:22,tr:45,shine:60,depth:1,tilt:10,par:1,gyro:0,anim:1,bounce:45,speed:100};
+let fx = Object.assign({}, FXD);
+try{ Object.assign(fx, JSON.parse(localStorage.getItem('w20-fx')||'{}')); }catch(e){}
+function fxApply(){
+  const r = document.documentElement, s = r.style;
+  fx.dur = 100/Math.max(30,fx.speed);
+  r.dataset.glass = fx.glass?'on':'off'; r.dataset.anim = fx.anim?'on':'off';
+  r.dataset.depth = fx.depth?'on':'off'; r.dataset.gyro = fx.gyro?'on':'off';
+  s.setProperty('--zs', fx.zoom ? fx.zs/100 : .94); s.setProperty('--g-blur', fx.blur+'px'); s.setProperty('--g-a', Math.max(.06,1-fx.tr/100));
+  s.setProperty('--g-shine', fx.shine/100); s.setProperty('--dur', fx.dur);
+  s.setProperty('--ease', `cubic-bezier(.34,${(1+fx.bounce*.014).toFixed(3)},.64,1)`);
+}
+function fxSave(){ try{ localStorage.setItem('w20-fx', JSON.stringify(fx)); }catch(e){} }
+function fxSet(k,v){
+  fx[k]=v; fxSave(); fxApply();
+  const l = document.getElementById('fxv-'+k); if(l) l.textContent = v + (l.dataset.u||'');
+  if(k==='gyro' && v) gyroOn();
+}
+function fxReset(){ fx = Object.assign({}, FXD); fxSave(); fxApply(); openFxPanel(); }
+const FXMAP = [
+  ['Liquid glass',[['sw','glass','Glass effect'],['rg','blur','Blur',0,40,'px'],['rg','tr','Transparency',0,90,'%'],['rg','shine','Edge shine',0,100,'%']]],
+  ['4D depth',[['sw','depth','Tilt & depth'],['rg','tilt','Tilt strength',0,25,'°'],['sw','par','Scroll parallax'],['sw','gyro','Phone gyro tilt']]],
+  ['Motion',[['sw','anim','Bounce animations'],['sw','zoom','macOS zoom-open'],['rg','zs','Open starts at',5,80,'%'],['rg','bounce','Bounce',0,100,'%'],['rg','speed','Speed',50,200,'%']]]
+];
+function openFxPanel(){
+  const m = document.getElementById('moreMenu');
+  m.innerHTML = `<div onclick="event.stopPropagation()">
+    <div class="mi" onclick="document.getElementById('moreMenu').classList.remove('open');toggleMore()"><span>‹ Back</span><small>glass · depth · motion</small></div>`
+    + FXMAP.map(([h,rows])=>`<div class="mh">${h}</div>` + rows.map(r=> r[0]==='sw'
+      ? `<label class="mi"><span>${r[2]}</span><input type="checkbox" class="fxc" ${fx[r[1]]?'checked':''} onchange="fxSet('${r[1]}',this.checked?1:0)"></label>`
+      : `<div class="fxrow"><label><span>${r[2]}</span><small id="fxv-${r[1]}" data-u="${r[5]}">${fx[r[1]]}${r[5]}</small></label>
+           <input type="range" class="fxr" min="${r[3]}" max="${r[4]}" value="${fx[r[1]]}" oninput="fxSet('${r[1]}',+this.value)"></div>`).join('')).join('')
+    + `<div class="mi" onclick="fxReset()"><span>Reset to defaults</span><small>↺</small></div></div>`;
+}
+/* 4D tilt: perspective rotation + moving glare + shifting shadow */
+const TILT_SEL = '.tfa,.potd,.res-card,.cat-tile,.panel,.topstats';
+let tEl = null;
+function tiltSet(el,e,press){
+  const r = el.getBoundingClientRect(), px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+  const a = fx.tilt*Math.min(1,420/r.width);
+  el.style.transition = 'transform 90ms linear, box-shadow 90ms linear';
+  el.style.transform = `perspective(900px) rotateX(${((.5-py)*2*a).toFixed(2)}deg) rotateY(${((px-.5)*2*a).toFixed(2)}deg) scale(${press?.975:1.02})`;
+  el.style.setProperty('--mx',(px*100).toFixed(0)+'%'); el.style.setProperty('--my',(py*100).toFixed(0)+'%');
+  el.style.setProperty('--gl',1); el.style.setProperty('--sx',((.5-px)*28).toFixed(1)); el.style.setProperty('--sy',((.5-py)*18).toFixed(1));
+}
+function tiltEnd(el){
+  el.style.transition=''; el.style.transform='';
+  ['--gl','--sx','--sy'].forEach(p=>el.style.removeProperty(p));
+  if(tEl===el) tEl=null;
+}
+document.addEventListener('pointermove', e=>{
+  if(!fx.depth || e.pointerType==='touch' || document.documentElement.dataset.gyro==='on') return;
+  const el = e.target.closest && e.target.closest(TILT_SEL);
+  if(tEl && tEl!==el) tiltEnd(tEl);
+  if(el){ tEl = el; tiltSet(el,e,false); }
+});
+document.addEventListener('pointerout', e=>{ if(!e.relatedTarget && tEl) tiltEnd(tEl); });
+document.addEventListener('pointerdown', e=>{
+  if(!fx.depth) return;
+  const el = e.target.closest && e.target.closest(TILT_SEL); if(el){ tEl=el; tiltSet(el,e,true); }
+});
+['pointerup','pointercancel'].forEach(t=>document.addEventListener(t,e=>{
+  if(!tEl) return;
+  if(e.pointerType!=='touch' && t==='pointerup') tiltSet(tEl,e,false); else tiltEnd(tEl);
+}));
+/* gyro (phone) */
+function gy(e){
+  if(!fx.gyro || !fx.depth) return;
+  const c = v=>Math.max(-1,Math.min(1,v)), s = document.documentElement.style;
+  s.setProperty('--gx', (c((e.gamma||0)/30)*fx.tilt*.8).toFixed(2));
+  s.setProperty('--gy', (-c(((e.beta||0)-45)/30)*fx.tilt*.8).toFixed(2));
+}
+let gyBound = false;
+function gyroOn(){
+  const start = ()=>{ if(!gyBound){ addEventListener('deviceorientation', gy); gyBound = true; } };
+  if(window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission==='function'){
+    DeviceOrientationEvent.requestPermission().then(r=>{ if(r==='granted') start(); else fxSet('gyro',0); }).catch(()=>fxSet('gyro',0));
+  } else start();
+}
+/* scroll parallax for the glass orbs */
+addEventListener('scroll', ()=>{ if(fx.par) document.getElementById('gbg').style.setProperty('--sy', scrollY); }, {passive:true});
+fxApply(); if(fx.gyro) gyroOn();
+
+const savedTheme = localStorage.getItem('w20-theme');
+if(savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+updateLangLabel();
+if(window.innerWidth < 700) document.getElementById('q').placeholder = 'Search…';
+route();
+loadLangs().then(ls=>{
+  const l = (ls||[]).find(x=>x.code === state.lang);
+  if(!l) return;
+  const nm = l.native || l.name || state.lang;
+  if(nm === state.langName) return;
+  state.langName = nm;
+  localStorage.setItem('w20-lang-name', nm);
+  updateLangLabel();
+  const h = location.hash || '#/';
+  if(h === '#/' || h === '#') fillTopStats();
+});
+</script>
+</body>
+</html>
