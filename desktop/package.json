@@ -1,0 +1,34 @@
+{
+  "name": "wikipedia-2.0",
+  "productName": "Wikipedia 2.0",
+  "version": "1.0.0",
+  "description": "A live reading interface for Wikipedia — every article, image and category fetched at request time.",
+  "main": "main.js",
+  "author": "Wikipedia 2.0 contributors",
+  "license": "MIT",
+  "homepage": "https://technicalnihilist-lgtm.github.io/wikipedia-2.0/",
+  "scripts": {
+    "prestart": "node -e \"try{require('fs').copyFileSync('../index.html','index.html')}catch(e){}\"",
+    "start": "electron .",
+    "predist": "node -e \"try{require('fs').copyFileSync('../index.html','index.html')}catch(e){}\"",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.wikipedia20.desktop",
+    "productName": "Wikipedia 2.0",
+    "copyright": "Text CC BY-SA 4.0 (Wikipedia contributors). Images per Wikimedia Commons.",
+    "directories": { "output": "dist", "buildResources": "build" },
+    "files": ["main.js", "index.html", "build/icon.png"],
+    "win": { "target": ["nsis", "portable"], "icon": "build/icon.png" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "perMachine": false },
+    "mac": { "target": ["dmg", "zip"], "category": "public.app-category.reference", "icon": "build/icon.png" },
+    "linux": { "target": ["AppImage", "deb"], "category": "Reference", "icon": "build/icon.png", "maintainer": "Wikipedia 2.0" }
+  }
+}
