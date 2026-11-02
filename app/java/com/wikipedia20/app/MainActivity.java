@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.KeyEvent;
@@ -26,6 +28,12 @@ import java.io.OutputStream;
 public class MainActivity extends Activity {
 
     private WebView web;
+    // The app always loads the deployed site, so every web update lands in the app.
+    // If that fails (offline, site down) it falls back to the copy bundled in assets.
+    private static final String REMOTE = "https://technicalnihilist-lgtm.github.io/wikipedia-2.0/index.html";
+    private static final String LOCAL = "file:///android_asset/index.html";
+    private boolean pageReady = false;
+    private boolean fellBack = false;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -62,6 +70,9 @@ public class MainActivity extends Activity {
         web.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView v, String url) {
+                if (url != null && url.startsWith("https://technicalnihilist-lgtm.github.io/")) {
+                    return false;                       // stay inside the app
+                }
                 if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
@@ -73,8 +84,20 @@ public class MainActivity extends Activity {
 
             @Override
             public void onPageFinished(WebView v, String url) {
+                pageReady = true;
                 String js = readAsset("inject.js");
                 if (js != null) v.evaluateJavascript(js, null);
+            }
+
+            @Override
+            public void onReceivedError(WebView v, int code, String desc, String failing) {
+                if (!pageReady && !fellBack) fallback();
+            }
+
+            @Override
+            public void onReceivedError(WebView v, android.webkit.WebResourceRequest req,
+                                        android.webkit.WebResourceError err) {
+                if (req.isForMainFrame() && !pageReady && !fellBack) fallback();
             }
         });
 
@@ -85,7 +108,18 @@ public class MainActivity extends Activity {
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
 
-        web.loadUrl("file:///android_asset/index.html");
+        web.loadUrl(REMOTE);
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            public void run() {
+                if (!pageReady && !fellBack) fallback();
+            }
+        }, 7000);
+    }
+
+    private void fallback() {
+        if (fellBack) return;
+        fellBack = true;
+        web.loadUrl(LOCAL);
     }
 
     private int statusBarHeight() {
