@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wikipedia 2.0 — live</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f6f3ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wikipedia 2.0">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -395,7 +401,6 @@ footer.bot .flinks a{font-family:var(--mono);font-size:10px;letter-spacing:.13em
   .search input{height:46px;font-size:14.5px;padding-left:40px}
   .search svg{top:16px;left:14px;width:16px;height:16px}
   .icon-btn{width:34px;height:34px;font-size:13px}
-  .top-in{height:60px;gap:10px}
   .tfa .fx{padding:24px 20px}
   .rail-box ol li:nth-child(n+7){display:none}
   .prose p,.prose li{font-size:15.5px}
@@ -2059,6 +2064,13 @@ loadLangs().then(ls=>{
   const h = location.hash || '#/';
   if(h === '#/' || h === '#') fillTopStats();
 });
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>
