@@ -6,15 +6,25 @@
 
 <p align="center">
   A live reading interface for Wikipedia. Every article, image and category is fetched from the
-  Wikimedia APIs at the moment you open it — nothing is stored, nothing is pre-downloaded.
+  Wikimedia APIs the moment you open it — nothing is stored, nothing is pre-downloaded.
 </p>
 
 <p align="center">
-  <a href="apk/Wikipedia-2.0.apk"><b>⬇ Download the Android APK</b></a> ·
-  <a href="index.html">Open the web app</a>
+  <b>Web</b> · <a href="https://technicalnihilist-lgtm.github.io/wikipedia-2.0/">open the app</a> &nbsp;|&nbsp;
+  <b>Android</b> · <a href="apk/Wikipedia-2.0.apk">Wikipedia-2.0.apk</a> &nbsp;|&nbsp;
+  <b>Windows / macOS / Linux</b> · <a href="desktop/">desktop build</a>
 </p>
 
 ---
+
+## Runs everywhere
+
+| Platform | How you get it |
+|---|---|
+| **Web** | [technicalnihilist-lgtm.github.io/wikipedia-2.0](https://technicalnihilist-lgtm.github.io/wikipedia-2.0/) — no install |
+| **Windows / macOS / Linux** | **Install as an app** straight from the browser (Chrome/Edge: install icon in the address bar · Safari: Share → Add to Dock). It opens in its own window, with a real icon, and keeps working if the site is offline. |
+| **Windows / macOS / Linux** | Native builds from [`desktop/`](desktop/) — `.exe`, `.dmg`, `.AppImage`, `.deb` via Electron. GitHub Actions builds all three on every tag. |
+| **Android** | [`apk/Wikipedia-2.0.apk`](apk/Wikipedia-2.0.apk) — 49 KB, signed, Android 5.0+ |
 
 ## Screenshots
 
@@ -57,7 +67,7 @@
 
 `apk/Wikipedia-2.0.apk` — 49 KB, signed (v1 + v2), minSdk 21 (Android 5.0+).
 
-It is a WebView shell around `index.html` with three additions that the browser cannot do:
+A WebView shell around `index.html` with three additions the browser cannot do:
 
 - **Downloads** go through a JS bridge, so images save straight into your **Downloads** folder
   (MediaStore on Android 10+).
@@ -65,6 +75,20 @@ It is a WebView shell around `index.html` with three additions that the browser 
 - **Transparent status bar** — the glass header runs behind it, icons follow the light/dark theme.
 
 Sideload it (allow install from unknown sources). It is not on the Play Store.
+
+## Desktop app
+
+`desktop/` is an Electron wrapper around the same `index.html`:
+
+```bash
+cd desktop && npm install && npm start     # run it
+npm run dist:win                            # .exe installer + portable
+npm run dist:mac                            # .dmg + .zip
+npm run dist:linux                          # .AppImage + .deb
+```
+
+`.github/workflows/desktop.yml` builds all three on GitHub's Windows, macOS and Linux runners on
+every `v*` tag, and uploads the installers as artifacts — so you never need all three machines.
 
 ## Attribution
 
@@ -79,7 +103,8 @@ This project is **not** affiliated with, endorsed by, or operated by the Wikimed
 ## Running the web app
 
 No build step, no dependencies, no API keys. Open `index.html` — it needs an internet connection,
-because everything is live.
+because everything is live. Served over HTTPS it installs as a PWA (`manifest.webmanifest` +
+`sw.js`); the service worker caches only the app shell, never an article or an image.
 
 ## Building the APK
 
