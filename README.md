@@ -1,4 +1,21 @@
+<p align="center">
+  <img src="screenshots/01-home.jpg" alt="Wikipedia 2.0 — home" width="100%">
+</p>
 
+<h1 align="center">Wikipedia 2.0</h1>
+
+<p align="center">
+  A live reading interface for Wikipedia. Every article, image and category is fetched from the
+  Wikimedia APIs the moment you open it — nothing is stored, nothing is pre-downloaded.
+</p>
+
+<p align="center">
+  <b>Web</b> · <a href="https://technicalnihilist-lgtm.github.io/wikipedia-2.0/">open the app</a> &nbsp;|&nbsp;
+  <b>Android</b> · <a href="apk/Wikipedia-2.0.apk">Wikipedia-2.0.apk</a> &nbsp;|&nbsp;
+  <b>Windows / macOS / Linux</b> · <a href="desktop/">desktop build</a>
+</p>
+
+---
 
 ## ☕ Donate / Buy me a coffee
 
@@ -82,25 +99,6 @@ If you like our work, you can support us with a donation. We are bringing this v
 - **Filipino** (Filipino): ☕ Mag-donate / Bilhan mo ako ng kape — Malapit na. Paparating na ang Paytm, PayPal at GPay. Kung gusto mo ang aming gawa, matutulungan mo kami sa pamamagitan ng donasyon. Ilalabas namin ito sa lalong madaling panahon.
 
 </details>
-
----
-
-<p align="center">
-  <img src="screenshots/01-home.jpg" alt="Wikipedia 2.0 — home" width="100%">
-</p>
-
-<h1 align="center">Wikipedia 2.0</h1>
-
-<p align="center">
-  A live reading interface for Wikipedia. Every article, image and category is fetched from the
-  Wikimedia APIs the moment you open it — nothing is stored, nothing is pre-downloaded.
-</p>
-
-<p align="center">
-  <b>Web</b> · <a href="https://technicalnihilist-lgtm.github.io/wikipedia-2.0/">open the app</a> &nbsp;|&nbsp;
-  <b>Android</b> · <a href="apk/Wikipedia-2.0.apk">Wikipedia-2.0.apk</a> &nbsp;|&nbsp;
-  <b>Windows / macOS / Linux</b> · <a href="desktop/">desktop build</a>
-</p>
 
 ---
 
@@ -203,4 +201,5 @@ publishing anywhere:
 keytool -genkeypair -keystore release.p12 -storetype PKCS12 -alias w20 \
   -keyalg RSA -keysize 2048 -validity 10000
 ```
+
 
