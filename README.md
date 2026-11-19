@@ -2,11 +2,11 @@
 
 <img src="assets/icon.png" width="96" height="96" alt="Wikipedia 2.0 icon">
 
-<img src="assets/banner.svg" alt="Wikipedia 2.0 — a live reading interface for Wikipedia, web + Android APK">
+<img src="assets/banner.svg" alt="Wikipedia 2.0">
 
 <a href="https://github.com/technicalnihilist-lgtm/wikipedia-2.0/stargazers"><img src="https://img.shields.io/badge/stars-2-5A31F4?style=for-the-badge&logo=github&logoColor=white" alt="stars: 2"></a>&nbsp;<a href="https://github.com/technicalnihilist-lgtm/wikipedia-2.0/network/members"><img src="https://img.shields.io/badge/forks-0-3FB950?style=for-the-badge" alt="forks: 0"></a>
 
-<a href="https://github.com/technicalnihilist-lgtm/wikipedia-2.0/releases/latest"><img src="https://img.shields.io/badge/DOWNLOAD-APK-6D5AE6?style=for-the-badge&logo=android&logoColor=white" alt="Download APK"></a>
+<a href="https://github.com/technicalnihilist-lgtm/wikipedia-2.0/releases/latest/download/Wikipedia-2.0.apk"><img src="https://img.shields.io/badge/DOWNLOAD-APK-6D5AE6?style=for-the-badge&logo=android&logoColor=white" alt="Download APK"></a> <a href="https://technicalnihilist-lgtm.github.io/apps-site/apps/wikipedia-2.0.html"><img src="https://img.shields.io/badge/WEBSITE-OPEN-3B82F6?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website"></a>
 
 <b>Support the work</b>
 
